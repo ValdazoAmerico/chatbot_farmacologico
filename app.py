@@ -78,10 +78,18 @@ chain = ConversationalRetrievalChain(retriever=retriever_from_llm,return_source_
 st.title("PharmaAssistant 👩‍⚕️")
 
 
-
+def clear_text():
+	st.session_state["temp"] = st.session_state["text"]
+	st.session_state["text"] = ""
+		
+		
 def get_text():
-        input_text = st.text_input("You: ", "Hola!", key="input")
-        return input_text 
+	input_text = st.text_input("You: ", "", key="text",on_change=clear_text)
+	st.session_state['user_input'].append(input_text)
+	if st.session_state['temp'] == "":
+		return "Hola!"
+	else:
+		return st.session_state['temp']
 
 user_input = get_text()
 
