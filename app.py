@@ -28,6 +28,9 @@ if 'past' not in st.session_state:
 if 'ai' not in st.session_state:
         st.session_state['ai'] = []
 
+if 'temp' not in st.session_state:
+        st.session_state['temp'] = []
+	
 embeddings = OpenAIEmbeddings()
 
 
