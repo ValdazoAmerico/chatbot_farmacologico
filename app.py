@@ -100,10 +100,9 @@ if user_input:
             st.session_state['past'] = []
             st.session_state['generated'] = []
             st.session_state.past.append("Hola")
-            st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos.')
+            st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
         else:
             try:
-                    print("QUESTION", user_input)
                     output = chain({"question":user_input})['answer']
                     st.session_state.ai.append(output)
                     st.session_state.past.append(user_input)
