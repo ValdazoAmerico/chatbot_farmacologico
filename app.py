@@ -85,7 +85,6 @@ def clear_text():
 		
 def get_text():
 	input_text = st.text_input("You: ", "", key="text",on_change=clear_text)
-	st.session_state['user_input'].append(input_text)
 	if st.session_state['temp'] == "":
 		return "Hola!"
 	else:
