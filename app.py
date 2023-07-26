@@ -12,9 +12,12 @@ from langchain.llms import OpenAI
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.retrievers.multi_query import MultiQueryRetriever
-
+import logging
 from langchain.schema import Document
 from langchain.embeddings import OpenAIEmbeddings
+
+logging.basicConfig()
+logging.getLogger("langchain.retrievers.multi_query").setLevel(logging.INFO)
 
 if 'generated' not in st.session_state:
         st.session_state['generated'] = []
@@ -68,8 +71,8 @@ if len(st.session_state.ai) == 1:
 if len(st.session_state.ai) > 1:
 		memory.save_context({"question": st.session_state.past[-2]}, {"output": st.session_state.ai[-2]})
 		memory.save_context({"question": st.session_state.past[-1]}, {"output": st.session_state.ai[-1]})
-qa = load_qa_chain(OpenAI(temperature=0), chain_type="map_reduce", question_prompt=QUESTION_PROMPT, combine_prompt=COMBINE_PROMPT, verbose=False)
-chain = ConversationalRetrievalChain(retriever=retriever_from_llm,return_source_documents=False, combine_docs_chain=qa, question_generator=question_generator, verbose=False, memory=memory)
+qa = load_qa_chain(OpenAI(temperature=0), chain_type="map_reduce", question_prompt=QUESTION_PROMPT, combine_prompt=COMBINE_PROMPT, verbose=True)
+chain = ConversationalRetrievalChain(retriever=retriever_from_llm,return_source_documents=False, combine_docs_chain=qa, question_generator=question_generator, verbose=True, memory=memory)
 
 
 st.title("PharmaAssistant 👩‍⚕️")
