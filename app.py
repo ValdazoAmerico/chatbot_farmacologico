@@ -74,7 +74,7 @@ qa = load_qa_chain(OpenAI(temperature=0), chain_type="map_reduce", question_prom
 chain = ConversationalRetrievalChain(retriever=retriever_from_llm,return_source_documents=False, combine_docs_chain=qa, question_generator=question_generator, verbose=False, memory=memory)
 
 
-st.title("Chatbot Farmacología 👩‍⚕️")
+st.title("PharmaAssistant 👩‍⚕️")
 
 
 
