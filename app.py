@@ -60,7 +60,11 @@ QUESTION_PROMPT = PromptTemplate(
 
 combine_prompt_template = """Dados los siguientes extractos de un largo documento y una pregunta, crea una respuesta final. Si no hay texto relevante para responder la pregunta no trates de inventar una respuesta, di simplemente que 'No hay texto relevante para responder la pregunta'.
 
+###
+
 {summaries}
+
+###
 
 Human: {question}
 Assistant:"""
