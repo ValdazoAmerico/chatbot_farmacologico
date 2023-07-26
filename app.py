@@ -5,7 +5,7 @@ import streamlit_scrollable_textbox as stx
 from langchain.prompts.prompt import PromptTemplate
 from langchain.vectorstores import FAISS
 import os
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferWindowMemory
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chains import ConversationalRetrievalChain
 from langchain.llms import OpenAI
@@ -68,7 +68,7 @@ Assistant:"""
 COMBINE_PROMPT = PromptTemplate(
         template=combine_prompt_template, input_variables=["summaries", "question"]
     )
-memory = ConversationBufferMemory(memory_key="chat_history", input_key="question", return_messages=True)
+memory = ConversationBufferWindowMemory(memory_key="chat_history", input_key="question", return_messages=True, k=2)
 if len(st.session_state.ai) == 1:
 		memory.save_context({"question": st.session_state.past[-1]}, {"output": st.session_state.ai[0]})
 if len(st.session_state.ai) > 1:
