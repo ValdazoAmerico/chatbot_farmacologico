@@ -12,7 +12,7 @@ from langchain.llms import OpenAI
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.retrievers.multi_query import MultiQueryRetriever
-import logging
+
 from langchain.schema import Document
 from langchain.embeddings import OpenAIEmbeddings
 
@@ -26,8 +26,6 @@ if 'ai' not in st.session_state:
         st.session_state['ai'] = []
 
 embeddings = OpenAIEmbeddings()
-logging.basicConfig()
-logging.getLogger("langchain.retrievers.multi_query").setLevel(logging.INFO)
 
 
 vectordb = FAISS.load_local('./faiss_index/', embeddings)
