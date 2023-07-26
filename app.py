@@ -49,7 +49,7 @@ Pregunta independiente:"""
 CONDENSE_QUESTION_PROMPT = PromptTemplate(template=condense_template, input_variables=["chat_history", "question"])
 llm1 = OpenAI()
 question_generator = LLMChain(llm=llm1, prompt=CONDENSE_QUESTION_PROMPT)
-question_prompt_template = """Utiliza el siguiente extracto de un largo documento para ver si algún texto es relevante para responder la pregunta.
+question_prompt_template = """Utiliza el siguiente extracto de un largo documento para ver si algún texto es relevante para responder la pregunta. Si no hay ningún texto relevante para responder la pregunta, devuelve '#'
 
 Extracto: {context}
 Pregunta: {question}
