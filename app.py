@@ -78,7 +78,7 @@ qa = load_qa_chain(OpenAI(temperature=0), chain_type="map_reduce", question_prom
 chain = ConversationalRetrievalChain(retriever=retriever_from_llm,return_source_documents=False, combine_docs_chain=qa, question_generator=question_generator, verbose=True, memory=memory)
 
 
-st.title("PharmaAssistant 👩‍⚕️")
+st.title("PharmaAssistant :hospital:")
 
 
 def clear_text():
