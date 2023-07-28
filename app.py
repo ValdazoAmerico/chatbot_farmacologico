@@ -68,7 +68,7 @@ if user_input:
             st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
         else:
             try:
-                    output = chain({"question":user_input)['answer']
+                    output = chain({"question":user_input})['answer']
                     st.session_state.ai.append(output)
                     st.session_state.past.append(user_input)
                     st.session_state['generated'].append(output)
