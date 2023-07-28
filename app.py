@@ -41,7 +41,7 @@ if len(st.session_state.ai) > 1:
 		memory.save_context({"question": st.session_state.past[-2]}, {"output": st.session_state.ai[-2]})
 		memory.save_context({"question": st.session_state.past[-1]}, {"output": st.session_state.ai[-1]})
 chain = ConversationalRetrievalChain.from_llm(ChatOpenAI(temperature=0),
-                                   retriever=vectordb.as_retriever())
+                                   retriever=vectordb.as_retriever(), memory=memory)
 
 st.title("CardioBot :hospital:")
 
@@ -68,7 +68,7 @@ if user_input:
             st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
         else:
             try:
-                    output = chain({"question":user_input, "chat_history":[})['answer']
+                    output = chain({"question":user_input)['answer']
                     st.session_state.ai.append(output)
                     st.session_state.past.append(user_input)
                     st.session_state['generated'].append(output)
