@@ -46,9 +46,9 @@ if len(st.session_state.ai) > 1:
 chain = ConversationalRetrievalChain.from_llm(ChatOpenAI(temperature=0),
                                    retriever=vectordb.as_retriever(), memory=memory)
 
-st.title("CardioBot :hospital:")
 col1, col2 = st.columns(2)
 with col1:
+	st.title("CardioBot :hospital:")
 	def clear_text():
 		st.session_state["temp"] = st.session_state["text"]
 		st.session_state["text"] = ""
@@ -74,7 +74,7 @@ with col1:
 	                    docs = vectordb.as_retriever().get_relevant_documents(user_input)
 	                    raw_string = ''
 	                    for d in docs:
-	                    	raw_string += d.page_content
+	                    	raw_string += d.page_content.replace('\n', ' ')
 	                    	raw_string += '\n'
 	                    st.session_state.data.append(raw_string)
 	                    output = chain({"question":user_input})['answer']
