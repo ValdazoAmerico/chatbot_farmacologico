@@ -27,6 +27,9 @@ if 'ai' not in st.session_state:
 
 if "temp" not in st.session_state:
 	st.session_state["temp"] = ""
+
+if 'data' not in st.session_state:
+	st.session_state['data'] = []
 	
 embeddings = OpenAIEmbeddings()
 
@@ -44,41 +47,53 @@ chain = ConversationalRetrievalChain.from_llm(ChatOpenAI(temperature=0),
                                    retriever=vectordb.as_retriever(), memory=memory)
 
 st.title("CardioBot :hospital:")
-
-
-def clear_text():
-	st.session_state["temp"] = st.session_state["text"]
-	st.session_state["text"] = ""
-		
-		
-def get_text():
-	input_text = st.text_input("You: ", "", key="text",on_change=clear_text)
-	if st.session_state['temp'] == "":
-		return "Hola!"
-	else:
-		return st.session_state['temp']
-
-user_input = get_text()
-
-if user_input:
-        if user_input == 'Hola!':
-            st.session_state['past'] = []
-            st.session_state['generated'] = []
-            st.session_state.past.append("Hola")
-            st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
-        else:
-            try:
-                    output = chain({"question":user_input})['answer']
-                    st.session_state.ai.append(output)
-                    st.session_state.past.append(user_input)
-                    st.session_state['generated'].append(output)
-            except:
-                pass
-
-if st.session_state['generated']:
-        for i in range(len(st.session_state['generated']) - 1, -1, -1):
-            message(st.session_state["generated"][i], key=str(i))
-            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
-
-
+col1, col2 = st.columns(2)
+with col1:
+	def clear_text():
+		st.session_state["temp"] = st.session_state["text"]
+		st.session_state["text"] = ""
+			
+			
+	def get_text():
+		input_text = st.text_input("You: ", "", key="text",on_change=clear_text)
+		if st.session_state['temp'] == "":
+			return "Hola!"
+		else:
+			return st.session_state['temp']
 	
+	user_input = get_text()
+	
+	if user_input:
+	        if user_input == 'Hola!':
+	            st.session_state['past'] = []
+	            st.session_state['generated'] = []
+	            st.session_state.past.append("Hola")
+	            st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
+	        else:
+	            try:
+	                    o = chain({"question":user_input})
+			    output = o['answer']
+			    print("OUTPUT")
+			    print(o)
+	                    st.session_state.ai.append(output)
+	                    st.session_state.past.append(user_input)
+	                    st.session_state['generated'].append(output)
+	            except:
+	                pass
+	
+	if st.session_state['generated']:
+	        for i in range(len(st.session_state['generated']) - 1, -1, -1):
+	            message(st.session_state["generated"][i], key=str(i))
+	            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
+
+with col2:
+		st.title("EHR Patient Data")
+		if not st.session_state.patient_data:
+			patient_data = ""
+		else:
+			patient_data = st.session_state.patient_data[-1]
+
+		# Display the EHR patient data
+		if patient_data:
+			st.subheader(f"Context Information:")
+			stx.scrollableTextbox(patient_data,height = 350)
