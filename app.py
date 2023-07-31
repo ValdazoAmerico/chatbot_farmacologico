@@ -72,9 +72,9 @@ with col1:
 	        else:
 	            try:
 	                    o = chain({"question":user_input})
-			    output = o['answer']
-			    print("OUTPUT")
-			    print(o)
+	                    output = o['answer']
+	                    print("OUTPUT")
+	                    print(o)
 	                    st.session_state.ai.append(output)
 	                    st.session_state.past.append(user_input)
 	                    st.session_state['generated'].append(output)
