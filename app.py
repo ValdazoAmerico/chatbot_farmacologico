@@ -71,12 +71,12 @@ with col1:
 	            st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
 	        else:
 	            try:
-			    docs = vectordb.as_retriever().get_relevant_documents(user_input)
-			    raw_string = ''
-			    for d in docs:
-				    raw_string += d.page_content
-				    raw_string += '\n'
-			    st.session_state.data.append(raw_string)
+	                    docs = vectordb.as_retriever().get_relevant_documents(user_input)
+	                    raw_string = ''
+	                    for d in docs:
+	                    	raw_string += d.page_content
+	                    	raw_string += '\n'
+	                    st.session_state.data.append(raw_string)
 	                    output = chain({"question":user_input})['answer']
 	                    st.session_state.ai.append(output)
 	                    st.session_state.past.append(user_input)
