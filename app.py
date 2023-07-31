@@ -75,7 +75,7 @@ with col1:
 	                    raw_string = ''
 	                    for d in docs:
 	                    	raw_string += d.page_content.replace('\n', ' ')
-	                    	raw_string += '\n'
+	                    	raw_string += '\n\n'
 	                    st.session_state.data.append(raw_string)
 	                    output = chain({"question":user_input})['answer']
 	                    st.session_state.ai.append(output)
@@ -90,7 +90,6 @@ with col1:
 	            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
 
 with col2:
-		st.title("EHR Patient Data")
 		if not st.session_state.data:
 			patient_data = ""
 		else:
