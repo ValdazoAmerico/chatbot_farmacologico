@@ -88,10 +88,10 @@ with col1:
 
 with col2:
 		st.title("EHR Patient Data")
-		if not st.session_state.patient_data:
+		if not st.session_state.data:
 			patient_data = ""
 		else:
-			patient_data = st.session_state.patient_data[-1]
+			patient_data = st.session_state.data[-1]
 
 		# Display the EHR patient data
 		if patient_data:
