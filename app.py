@@ -89,6 +89,7 @@ print(st.session_state)
 
 docs = retriever.get_relevant_documents("beneficios de iecas")
 print(docs)
+raw_string = ''
 for d in range(len(docs)):
 	                        	raw_string += f'Extracto {d+1}:\n'
 	                        	raw_string += docs[d].page_content.replace('\n', ' ')
