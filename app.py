@@ -86,6 +86,16 @@ chain = ConversationalRetrievalChain(
 
 chain.combine_docs_chain.llm_chain.prompt = chat_prompt
 print(st.session_state)
+
+docs = retriever.get_relevant_documents(user_input)
+print(docs)
+for d in range(len(docs)):
+	                        	raw_string += f'Extracto {d+1}:\n'
+	                        	raw_string += docs[d].page_content.replace('\n', ' ')
+	                        	raw_string += '\n'
+	                        	raw_string += f"Página {str(docs[d].metadata.page)}"
+	                        	raw_string += '\n\n'
+print("raw", raw_string)
 st.title("CardioBot :hospital:")
 col1, col2 = st.columns(2)
 with col1:
