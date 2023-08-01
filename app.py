@@ -85,18 +85,7 @@ chain = ConversationalRetrievalChain(
 )
 
 chain.combine_docs_chain.llm_chain.prompt = chat_prompt
-print(st.session_state)
 
-docs = retriever.get_relevant_documents("beneficios de iecas")
-print(docs)
-raw_string = ''
-for d in range(len(docs)):
-	                        	raw_string += f'Extracto {d+1}:\n'
-	                        	raw_string += docs[d].page_content.replace('\n', ' ')
-	                        	raw_string += '\n'
-	                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
-	                        	raw_string += '\n\n'
-print("raw", raw_string)
 st.title("CardioBot :hospital:")
 col1, col2 = st.columns(2)
 with col1:
@@ -122,63 +111,49 @@ with col1:
 	            st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
 	        else:
 	            try:
-	                    print("len", str(len(st.session_state.ai)))
 	                    docs = retriever.get_relevant_documents(user_input)
 	                    if len(st.session_state.ai) == 0:
 	                        docs = retriever.get_relevant_documents(user_input)
 	                        response = chain({"question":user_input, "chat_history":[]})
 	                        output = response['answer']
 	                        raw_string = ''
-	                        print(docs)
 	                        for d in range(len(docs)):
 	                        	raw_string += f'Extracto {d+1}:\n'
 	                        	raw_string += docs[d].page_content.replace('\n', ' ')
 	                        	raw_string += '\n'
 	                        	raw_string += f"Página {str(docs[d].metadata['page'])}"
 	                        	raw_string += '\n\n'
-	                        print("Raw string", raw_string)
 	                        st.session_state['data'].append(raw_string)
-	                        print(st.session_state['data']) 
 	                        st.session_state.ai.append(output)
 	                        st.session_state.past.append(user_input)
 	                        st.session_state['generated'].append(output)   
 	                    elif len(st.session_state.ai) == 1:
 	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
-	                        print("chat_history")
-	                        print(chat_history)
 	                        response = chain({"question": user_input, "chat_history": chat_history})
 	                        output = response['answer']
 	                        raw_string = ''
-	                        print(docs)
 	                        for d in range(len(docs)):
 	                        	raw_string += f'Extracto {d+1}:\n'
 	                        	raw_string += docs[d].page_content.replace('\n', ' ')
 	                        	raw_string += '\n'
-	                        	raw_string += f"Página {str(docs[d].metadata.page)}"
+	                        	raw_string += f"Página {str(docs[d].metadata['page'])}"
 	                        	raw_string += '\n\n'
-	                        print("Raw string", raw_string)
-	                        st.session_state['data'].append(raw_string)
-	                        print(st.session_state['data']) 
+	                        st.session_state['data'].append(raw_string) 
 	                        st.session_state.ai.append(output)
 	                        st.session_state.past.append(user_input)
 	                        st.session_state['generated'].append(output)
 	                    else:
 	                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]
-	                        print("chat_history")
-	                        print(chat_history)
 	                        response = chain({"question": user_input, "chat_history": chat_history})
 	                        output = response['answer']
 	                        raw_string = ''
-	                        print(docs)
 	                        for d in range(len(docs)):
 	                        	raw_string += f'Extracto {d+1}:\n'
 	                        	raw_string += docs[d].page_content.replace('\n', ' ')
 	                        	raw_string += '\n'
-	                        	raw_string += f"Página {str(docs[d].metadata.page)}"
+	                        	raw_string += f"Página {str(docs[d].metadata['page'])}"
 	                        	raw_string += '\n\n'
-	                        print("Raw string", raw_string)
 	                        st.session_state['data'].append(raw_string)
-	                        print(st.session_state['data']) 
 	                        st.session_state.ai.append(output)
 	                        st.session_state.past.append(user_input)
 	                        st.session_state['generated'].append(output)
