@@ -163,12 +163,7 @@ with col1:
 	            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
 
 with col2:
-		print("SESSION")
-		print(st.session_state['data'])
-		if not st.session_state['data']:
-			patient_data = ""
-		else:
-			patient_data = raw_string
+		patient_data = "hola"
 
 		# Display the EHR patient data
 		if patient_data:
