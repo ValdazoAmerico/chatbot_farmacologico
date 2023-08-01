@@ -74,9 +74,9 @@ with col1:
 	                    docs = vectordb.as_retriever().get_relevant_documents(user_input)
 	                    raw_string = ''
 	                    for d in range(len(docs)):
-				raw_string += f'Extracto {d+1}:\n'
-	                    	raw_string += docs[d].page_content.replace('\n', ' ')
-	                    	raw_string += '\n\n'
+	                        raw_string += f'Extracto {d+1}:\n'
+	                        raw_string += docs[d].page_content.replace('\n', ' ')
+	                        raw_string += '\n\n'
 	                    st.session_state.data.append(raw_string)
 	                    output = chain({"question":user_input})['answer']
 	                    st.session_state.ai.append(output)
