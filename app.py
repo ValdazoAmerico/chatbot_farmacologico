@@ -168,7 +168,7 @@ with col2:
 		if not st.session_state['data']:
 			patient_data = ""
 		else:
-			patient_data = st.session_state['data'][-1]
+			patient_data = raw_string
 
 		# Display the EHR patient data
 		if patient_data:
