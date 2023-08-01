@@ -130,7 +130,7 @@ with col1:
 	                         raw_string += '\n\n'
 	                    else:
 	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
-	                        print("chat_history":)
+	                        print("chat_history")
 	                        print(chat_history)
 	                        response = chain({"question": user_input, "chat_history": chat_history})
 	                        output = response['answer']
