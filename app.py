@@ -119,7 +119,7 @@ with col1:
 	                    raw_string = ''
 	                    for d in range(len(docs)):
 	                        raw_string += f'Extracto {d+1}:\n'
-	                        raw_string += docs[d].page_content.replace('\n', ' ')
+	                        raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
 	                        raw_string += '\n\n'
 	                    st.session_state.data.append(raw_string)
 			    if len(st.session_state.ai) == 0:
