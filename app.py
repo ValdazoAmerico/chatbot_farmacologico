@@ -115,6 +115,7 @@ with col1:
 	            st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
 	        else:
 	            try:
+	                    print("len", str(len(st.session_state.ai)))
 	                    if len(st.session_state.ai) == 0:
 	                        response = chain({"question":user_input, "chat_history":[]})
 	                        output = response['answer']
