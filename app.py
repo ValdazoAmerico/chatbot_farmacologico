@@ -130,7 +130,7 @@ with col1:
 	                         raw_string += '\n'
 	                         raw_string += f"Página {str(docs[d].metadata.page)}"
 	                         raw_string += '\n\n'
-	                        st.session_state.data.append(raw_string)
+	                        st.session_state['data'].append(raw_string)
 	                    elif len(st.session_state.ai) == 1:
 	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        print("chat_history")
@@ -148,7 +148,7 @@ with col1:
 	                         raw_string += '\n'
 	                         raw_string += f"Página {str(docs[d].metadata.page)}"
 	                         raw_string += '\n\n'
-	                        st.session_state.data.append(raw_string)
+	                        st.session_state['data'].append(raw_string)
 	                    else:
 	                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        print("chat_history")
@@ -166,7 +166,7 @@ with col1:
 	                         raw_string += '\n'
 	                         raw_string += f"Página {str(docs[d].metadata.page)}"
 	                         raw_string += '\n\n'
-	                        st.session_state.data.append(raw_string)
+	                        st.session_state['data'].append(raw_string)
 	            except:
 	                pass
 	
