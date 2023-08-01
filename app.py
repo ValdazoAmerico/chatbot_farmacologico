@@ -88,7 +88,7 @@ chain.combine_docs_chain.llm_chain.prompt = chat_prompt
 print(st.session_state)
 
 docs = retriever.get_relevant_documents("beneficios de iecas")
-print(docs[0]['metadata'])
+print(docs)
 raw_string = ''
 for d in range(len(docs)):
 	                        	raw_string += f'Extracto {d+1}:\n'
