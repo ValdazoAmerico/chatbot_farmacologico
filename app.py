@@ -88,7 +88,7 @@ chain = ConversationalRetrievalChain(
 )
 
 chain.combine_docs_chain.llm_chain.prompt = chat_prompt
-
+print(st.session_state)
 st.title("CardioBot :hospital:")
 col1, col2 = st.columns(2)
 with col1:
@@ -130,7 +130,7 @@ with col1:
 	                         raw_string += '\n'
 	                         raw_string += f"Página {str(docs[d].metadata.page)}"
 	                         raw_string += '\n\n'
-	                         st.session_state.data.append(raw_string)
+	                        st.session_state.data.append(raw_string)
 	                    elif len(st.session_state.ai) == 1:
 	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        print("chat_history")
@@ -146,7 +146,7 @@ with col1:
 	                         raw_string += f'Extracto {d+1}:\n'
 	                         raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
 	                         raw_string += '\n\n'
-	                         st.session_state.data.append(raw_string)
+	                        st.session_state.data.append(raw_string)
 	                    else:
 	                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        print("chat_history")
@@ -162,7 +162,7 @@ with col1:
 	                         raw_string += f'Extracto {d+1}:\n'
 	                         raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
 	                         raw_string += '\n\n'
-	                         st.session_state.data.append(raw_string)
+	                        st.session_state.data.append(raw_string)
 	            except:
 	                pass
 	
