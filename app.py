@@ -84,7 +84,7 @@ chain = ConversationalRetrievalChain(
     retriever=retriever,
     question_generator=question_generator,
     combine_docs_chain=doc_chain,
-    verbose=True, return_source_documents=True
+    verbose=True, return_source_documents=True, max_tokens=500
 )
 
 chain.combine_docs_chain.llm_chain.prompt = chat_prompt
@@ -128,8 +128,24 @@ with col1:
 	                         raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
 	                         raw_string += '\n\n'
 	                         st.session_state.data.append(raw_string)
-	                    else:
+	                    elif len(st.session_state.ai) == 1:
 	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
+	                        print("chat_history")
+	                        print(chat_history)
+	                        response = chain({"question": user_input, "chat_history": chat_history})
+	                        output = response['answer']
+	                        docs = response['source_documents']
+	                        st.session_state.ai.append(output)
+	                        st.session_state.past.append(user_input)
+	                        st.session_state['generated'].append(output)
+	                        raw_string = ''
+	                        for d in range(len(docs)):
+	                         raw_string += f'Extracto {d+1}:\n'
+	                         raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
+	                         raw_string += '\n\n'
+	                         st.session_state.data.append(raw_string)
+	                    else:
+	                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        print("chat_history")
 	                        print(chat_history)
 	                        response = chain({"question": user_input, "chat_history": chat_history})
