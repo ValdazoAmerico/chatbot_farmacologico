@@ -115,7 +115,6 @@ with col1:
 	            st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
 	        else:
 	            try:
-	                    st.session_state.data.append(raw_string)
 	                    if len(st.session_state.ai) == 0:
 	                        response = chain({"question":user_input, "chat_history":[]})
 	                        output = response['answer']
@@ -128,6 +127,7 @@ with col1:
 	                         raw_string += f'Extracto {d+1}:\n'
 	                         raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
 	                         raw_string += '\n\n'
+	                         st.session_state.data.append(raw_string)
 	                    else:
 	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        print("chat_history")
@@ -143,6 +143,7 @@ with col1:
 	                         raw_string += f'Extracto {d+1}:\n'
 	                         raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
 	                         raw_string += '\n\n'
+	                         st.session_state.data.append(raw_string)
 	            except:
 	                pass
 	
