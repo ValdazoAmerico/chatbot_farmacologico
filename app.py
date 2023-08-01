@@ -76,7 +76,7 @@ llm = ChatOpenAI()
 question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 
 llm2 = ChatOpenAI(temperature=0, verbose=True)
-llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=500)
+llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=200)
 question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
 doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 
@@ -123,7 +123,7 @@ with col1:
 	                        st.session_state.past.append(user_input)
 	                        st.session_state['generated'].append(output)
 	                        raw_string = ''
-				print(docs)
+	                        print(docs)
 	                        for d in range(len(docs)):
 	                         raw_string += f'Extracto {d+1}:\n'
 	                         raw_string += docs[d].page_content.replace('\n', ' ')
