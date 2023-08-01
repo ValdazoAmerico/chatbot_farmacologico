@@ -119,6 +119,17 @@ with col1:
 	                        response = chain({"question":user_input, "chat_history":[]})
 	                        output = response['answer']
 	                        docs = response['source_documents']
+	                        raw_string = ''
+	                        print(docs)
+	                        for d in range(len(docs)):
+	                        	raw_string += f'Extracto {d+1}:\n'
+	                        	raw_string += docs[d].page_content.replace('\n', ' ')
+	                        	raw_string += '\n'
+	                        	raw_string += f"Página {str(docs[d].metadata.page)}"
+	                        	raw_string += '\n\n'
+	                        print("Raw string", raw_string)
+	                        st.session_state['data'].append(raw_string)
+	                        print(st.session_state['data']) 
 	                        st.session_state.ai.append(output)
 	                        st.session_state.past.append(user_input)
 	                        st.session_state['generated'].append(output)   
@@ -142,17 +153,6 @@ with col1:
 	                        st.session_state.ai.append(output)
 	                        st.session_state.past.append(user_input)
 	                        st.session_state['generated'].append(output)
-	                    raw_string = ''
-	                    print(docs)
-	                    for d in range(len(docs)):
-		                    raw_string += f'Extracto {d+1}:\n'
-		                    raw_string += docs[d].page_content.replace('\n', ' ')
-		                    raw_string += '\n'
-		                    raw_string += f"Página {str(docs[d].metadata.page)}"
-		                    raw_string += '\n\n'
-	                    print("Raw string", raw_string)
-	                    st.session_state['data'].append(raw_string)
-	                    print(st.session_state['data']) 
 	            except:
 	                pass
 	
@@ -162,7 +162,10 @@ with col1:
 	            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
 
 with col2:
-	patient_data = "hola"
+	if not st.session_state['data']:
+		patient_data = "hola"
+	else:
+		patient_data = st.session_state['data'][-1]
 	if patient_data:
 		st.subheader("Información de contexto:")
 		stx.scrollableTextbox(patient_data,height = 350)
