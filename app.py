@@ -115,7 +115,7 @@ with col1:
 	            st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
 	        else:
 	            try:
-	                    docs = vectordb.as_retriever().get_relevant_documents(user_input)
+	                    docs = retriever.get_relevant_documents(user_input)
 	                    raw_string = ''
 	                    for d in range(len(docs)):
 	                        raw_string += f'Extracto {d+1}:\n'
