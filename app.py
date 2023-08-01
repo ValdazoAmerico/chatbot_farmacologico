@@ -130,7 +130,9 @@ with col1:
 	                         raw_string += '\n'
 	                         raw_string += f"Página {str(docs[d].metadata.page)}"
 	                         raw_string += '\n\n'
+	                        print("Raw string", raw_string)
 	                        st.session_state['data'].append(raw_string)
+	                        print(st.session_state['data'])    
 	                    elif len(st.session_state.ai) == 1:
 	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        print("chat_history")
@@ -176,6 +178,8 @@ with col1:
 	            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
 
 with col2:
+		print("SESSION")
+		print(st.session_state['data'])
 		if not st.session_state['data']:
 			patient_data = ""
 		else:
