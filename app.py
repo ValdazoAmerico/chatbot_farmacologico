@@ -122,19 +122,19 @@ with col1:
 	                        raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
 	                        raw_string += '\n\n'
 	                    st.session_state.data.append(raw_string)
-			    if len(st.session_state.ai) == 0:
-		                    output = chain({"question":user_input, chat_history=[]})['answer']
-		                    st.session_state.ai.append(output)
-		                    st.session_state.past.append(user_input)
-		                    st.session_state['generated'].append(output)
-			    else:
-		                    chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
-				    print("chat_history":)
-				    print(chat_history)
-  		                    output = chain({"question": user_input, "chat_history": chat_history})
-		                    st.session_state.ai.append(output)
-		                    st.session_state.past.append(user_input)
-		                    st.session_state['generated'].append(output)
+	                    if len(st.session_state.ai) == 0:
+	                        output = chain({"question":user_input, chat_history=[]})['answer']
+	                        st.session_state.ai.append(output)
+	                        st.session_state.past.append(user_input)
+	                        st.session_state['generated'].append(output)
+	                    else:
+	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
+	                        print("chat_history":)
+	                        print(chat_history)
+	                        output = chain({"question": user_input, "chat_history": chat_history})
+	                        st.session_state.ai.append(output)
+	                        st.session_state.past.append(user_input)
+	                        st.session_state['generated'].append(output)
 	            except:
 	                pass
 	
