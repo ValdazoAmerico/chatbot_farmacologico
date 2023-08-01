@@ -2,7 +2,6 @@ import streamlit as st
 from streamlit_chat import message
 import streamlit_scrollable_textbox as stx
 import os
-from langchain.memory import ConversationBufferWindowMemory
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chains import ConversationalRetrievalChain
 from langchain.llms import OpenAI
