@@ -115,26 +115,34 @@ with col1:
 	            st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
 	        else:
 	            try:
-	                    docs = retriever.get_relevant_documents(user_input)
-	                    raw_string = ''
-	                    for d in range(len(docs)):
-	                        raw_string += f'Extracto {d+1}:\n'
-	                        raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
-	                        raw_string += '\n\n'
 	                    st.session_state.data.append(raw_string)
 	                    if len(st.session_state.ai) == 0:
-	                        output = chain({"question":user_input, chat_history=[]})['answer']
+	                        response = chain({"question":user_input, "chat_history":[]})
+	                        output = response['answer']
+	                        docs = response['source_documents']
 	                        st.session_state.ai.append(output)
 	                        st.session_state.past.append(user_input)
 	                        st.session_state['generated'].append(output)
+	                        raw_string = ''
+	                        for d in range(len(docs)):
+	                         raw_string += f'Extracto {d+1}:\n'
+	                         raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
+	                         raw_string += '\n\n'
 	                    else:
 	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        print("chat_history":)
 	                        print(chat_history)
-	                        output = chain({"question": user_input, "chat_history": chat_history})
+	                        response = chain({"question": user_input, "chat_history": chat_history})
+	                        output = response['answer']
+	                        docs = response['source_documents']
 	                        st.session_state.ai.append(output)
 	                        st.session_state.past.append(user_input)
 	                        st.session_state['generated'].append(output)
+	                        raw_string = ''
+	                        for d in range(len(docs)):
+	                         raw_string += f'Extracto {d+1}:\n'
+	                         raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
+	                         raw_string += '\n\n'
 	            except:
 	                pass
 	
