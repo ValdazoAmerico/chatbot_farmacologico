@@ -76,7 +76,7 @@ llm = ChatOpenAI()
 question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 
 llm2 = ChatOpenAI(temperature=0, verbose=True)
-llm3 = ChatOpenAI(temperature=0, verbose=True)
+llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=500)
 question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
 doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 
@@ -84,7 +84,7 @@ chain = ConversationalRetrievalChain(
     retriever=retriever,
     question_generator=question_generator,
     combine_docs_chain=doc_chain,
-    verbose=True, return_source_documents=True, max_tokens=500
+    verbose=True, return_source_documents=True
 )
 
 chain.combine_docs_chain.llm_chain.prompt = chat_prompt
