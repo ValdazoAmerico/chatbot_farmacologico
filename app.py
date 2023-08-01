@@ -81,7 +81,7 @@ chain = ConversationalRetrievalChain(
     retriever=retriever,
     question_generator=question_generator,
     combine_docs_chain=doc_chain,
-    verbose=True, return_source_documents=False
+    verbose=True, return_source_documents=True
 )
 
 chain.combine_docs_chain.llm_chain.prompt = chat_prompt
@@ -113,9 +113,9 @@ with col1:
 	            try:
 	                    docs = retriever.get_relevant_documents(user_input)
 	                    if len(st.session_state.ai) == 0:
-	                        docs = retriever.get_relevant_documents(user_input)
 	                        response = chain({"question":user_input, "chat_history":[]})
 	                        output = response['answer']
+	                        docs = response['source_documents']
 	                        raw_string = ''
 	                        for d in range(len(docs)):
 	                        	raw_string += f'Extracto {d+1}:\n'
@@ -131,6 +131,7 @@ with col1:
 	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        response = chain({"question": user_input, "chat_history": chat_history})
 	                        output = response['answer']
+	                        docs = response['source_documents']   
 	                        raw_string = ''
 	                        for d in range(len(docs)):
 	                        	raw_string += f'Extracto {d+1}:\n'
@@ -146,6 +147,7 @@ with col1:
 	                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        response = chain({"question": user_input, "chat_history": chat_history})
 	                        output = response['answer']
+	                        docs = response['source_documents']
 	                        raw_string = ''
 	                        for d in range(len(docs)):
 	                        	raw_string += f'Extracto {d+1}:\n'
@@ -167,7 +169,7 @@ with col1:
 
 with col2:
 	if not st.session_state['data']:
-		patient_data = "hola"
+		patient_data = ""
 	else:
 		patient_data = st.session_state['data'][-1]
 	if patient_data:
