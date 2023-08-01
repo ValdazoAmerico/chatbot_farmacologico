@@ -45,10 +45,10 @@ if len(st.session_state.ai) > 1:
 		memory.save_context({"question": st.session_state.past[-1]}, {"output": st.session_state.ai[-1]})
 chain = ConversationalRetrievalChain.from_llm(ChatOpenAI(temperature=0),
                                    retriever=vectordb.as_retriever(), memory=memory)
-
+st.title("CardioBot :hospital:")
 col1, col2 = st.columns(2)
 with col1:
-	st.title("CardioBot :hospital:")
+	
 	def clear_text():
 		st.session_state["temp"] = st.session_state["text"]
 		st.session_state["text"] = ""
