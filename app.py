@@ -1,8 +1,6 @@
 import streamlit as st
 from streamlit_chat import message
 import streamlit_scrollable_textbox as stx
-
-from langchain.prompts.prompt import PromptTemplate
 from langchain.vectorstores import FAISS
 import os
 from langchain.memory import ConversationBufferWindowMemory
