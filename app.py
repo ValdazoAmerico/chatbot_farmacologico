@@ -122,18 +122,7 @@ with col1:
 	                        docs = response['source_documents']
 	                        st.session_state.ai.append(output)
 	                        st.session_state.past.append(user_input)
-	                        st.session_state['generated'].append(output)
-	                        raw_string = ''
-	                        print(docs)
-	                        for d in range(len(docs)):
-	                         raw_string += f'Extracto {d+1}:\n'
-	                         raw_string += docs[d].page_content.replace('\n', ' ')
-	                         raw_string += '\n'
-	                         raw_string += f"Página {str(docs[d].metadata.page)}"
-	                         raw_string += '\n\n'
-	                        print("Raw string", raw_string)
-	                        st.session_state['data'].append(raw_string)
-	                        print(st.session_state['data'])    
+	                        st.session_state['generated'].append(output)   
 	                    elif len(st.session_state.ai) == 1:
 	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        print("chat_history")
@@ -144,14 +133,6 @@ with col1:
 	                        st.session_state.ai.append(output)
 	                        st.session_state.past.append(user_input)
 	                        st.session_state['generated'].append(output)
-	                        raw_string = ''
-	                        for d in range(len(docs)):
-	                         raw_string += f'Extracto {d+1}:\n'
-	                         raw_string += docs[d].page_content.replace('\n', ' ')
-	                         raw_string += '\n'
-	                         raw_string += f"Página {str(docs[d].metadata.page)}"
-	                         raw_string += '\n\n'
-	                        st.session_state['data'].append(raw_string)
 	                    else:
 	                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        print("chat_history")
@@ -162,14 +143,17 @@ with col1:
 	                        st.session_state.ai.append(output)
 	                        st.session_state.past.append(user_input)
 	                        st.session_state['generated'].append(output)
-	                        raw_string = ''
-	                        for d in range(len(docs)):
-	                         raw_string += f'Extracto {d+1}:\n'
-	                         raw_string += docs[d].page_content.replace('\n', ' ')
-	                         raw_string += '\n'
-	                         raw_string += f"Página {str(docs[d].metadata.page)}"
-	                         raw_string += '\n\n'
-	                        st.session_state['data'].append(raw_string)
+	                    raw_string = ''
+	                    print(docs)
+	                    for d in range(len(docs)):
+	                    raw_string += f'Extracto {d+1}:\n'
+	                    raw_string += docs[d].page_content.replace('\n', ' ')
+	                    raw_string += '\n'
+	                    raw_string += f"Página {str(docs[d].metadata.page)}"
+	                    raw_string += '\n\n'
+	                    print("Raw string", raw_string)
+	                    st.session_state['data'].append(raw_string)
+	                    print(st.session_state['data']) 
 	            except:
 	                pass
 	
