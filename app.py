@@ -76,7 +76,7 @@ llm = ChatOpenAI()
 question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 
 llm2 = ChatOpenAI(temperature=0, verbose=True)
-llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=200)
+llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=500)
 question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
 doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 
@@ -144,7 +144,9 @@ with col1:
 	                        raw_string = ''
 	                        for d in range(len(docs)):
 	                         raw_string += f'Extracto {d+1}:\n'
-	                         raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
+	                         raw_string += docs[d].page_content.replace('\n', ' ')
+	                         raw_string += '\n'
+	                         raw_string += f"Página {str(docs[d].metadata.page)}"
 	                         raw_string += '\n\n'
 	                        st.session_state.data.append(raw_string)
 	                    else:
@@ -160,7 +162,9 @@ with col1:
 	                        raw_string = ''
 	                        for d in range(len(docs)):
 	                         raw_string += f'Extracto {d+1}:\n'
-	                         raw_string += docs[d].page_content.replace('\n', ' ') + '\n' + "Página " + str(docs[d].metadata.page)
+	                         raw_string += docs[d].page_content.replace('\n', ' ')
+	                         raw_string += '\n'
+	                         raw_string += f"Página {str(docs[d].metadata.page)}"
 	                         raw_string += '\n\n'
 	                        st.session_state.data.append(raw_string)
 	            except:
