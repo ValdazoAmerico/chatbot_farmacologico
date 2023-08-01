@@ -146,11 +146,11 @@ with col1:
 	                    raw_string = ''
 	                    print(docs)
 	                    for d in range(len(docs)):
-	                    raw_string += f'Extracto {d+1}:\n'
-	                    raw_string += docs[d].page_content.replace('\n', ' ')
-	                    raw_string += '\n'
-	                    raw_string += f"Página {str(docs[d].metadata.page)}"
-	                    raw_string += '\n\n'
+		                    raw_string += f'Extracto {d+1}:\n'
+		                    raw_string += docs[d].page_content.replace('\n', ' ')
+		                    raw_string += '\n'
+		                    raw_string += f"Página {str(docs[d].metadata.page)}"
+		                    raw_string += '\n\n'
 	                    print("Raw string", raw_string)
 	                    st.session_state['data'].append(raw_string)
 	                    print(st.session_state['data']) 
