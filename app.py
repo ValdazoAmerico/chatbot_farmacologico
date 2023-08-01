@@ -92,7 +92,6 @@ print(st.session_state)
 st.title("CardioBot :hospital:")
 col1, col2 = st.columns(2)
 with col1:
-	
 	def clear_text():
 		st.session_state["temp"] = st.session_state["text"]
 		st.session_state["text"] = ""
@@ -163,9 +162,7 @@ with col1:
 	            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
 
 with col2:
-		patient_data = "hola"
-
-		# Display the EHR patient data
-		if patient_data:
-			st.subheader("Información de contexto:")
-			stx.scrollableTextbox(patient_data,height = 350)
+	patient_data = "hola"
+	if patient_data:
+		st.subheader("Información de contexto:")
+		stx.scrollableTextbox(patient_data,height = 350)
