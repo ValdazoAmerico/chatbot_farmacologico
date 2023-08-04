@@ -108,7 +108,7 @@ with col1:
 	            st.session_state['past'] = []
 	            st.session_state['generated'] = []
 	            st.session_state.past.append("Hola")
-	            st.session_state['generated'].append('¡Hola! Hacé tu consulta sobre tratamientos farmacológicos para ICC e Hipertensión Arterial Pulmonar.')
+	            st.session_state['generated'].append('¡Hola! Soy CardioBot, una herramienta especializada para apoyar a los médicos en el análisis de textos relacionados con cardiología. Mi conocimiento se basa en información basada en evidencia científica sobre tratamientos y medicación en esta área.')
 	        else:
 	            try:
 	                    docs = retriever.get_relevant_documents(user_input)
