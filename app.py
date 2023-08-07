@@ -5,7 +5,7 @@ import os
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chains import ConversationalRetrievalChain
 from langchain.llms import OpenAI
-from langchain.chains import LLMChain
+from langchain.chains import LLMChain, HypotheticalDocumentEmbedder
 from langchain.chat_models import ChatOpenAI
 from langchain.vectorstores import FAISS
 import logging
@@ -36,7 +36,18 @@ if "temp" not in st.session_state:
 if 'data' not in st.session_state:
 	st.session_state['data'] = []
 	
-embeddings = OpenAIEmbeddings()
+base_embeddings = OpenAIEmbeddings()
+llm_hyde = OpenAI()
+
+prompt_template = """Redacta un fragmento de un artículo científico para responder a la pregunta.
+Pregunta: {question}
+Respuesta:"""
+prompt = PromptTemplate(input_variables=["question"], template=prompt_template)
+llm_chain = LLMChain(llm=llm_hyde, prompt=prompt)
+
+embeddings = HypotheticalDocumentEmbedder(
+    llm_chain=llm_chain, base_embeddings=base_embeddings
+)
 
 vectordb = FAISS.load_local('./faiss_index/', embeddings)
 retriever = vectordb.as_retriever(search_kwargs={"k": 3})
