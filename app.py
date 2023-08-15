@@ -49,7 +49,7 @@ embeddings = HypotheticalDocumentEmbedder(
     llm_chain=llm_chain, base_embeddings=base_embeddings
 )
 
-vectordb = FAISS.load_local('./faiss_index/', embeddings)
+vectordb = FAISS.load_local('./faixx_index2/', embeddings)
 print(vectordb)
 #retriever = vectordb.as_retriever(search_kwargs={"k": 3})
 retriever =vectordb.as_retriever()
