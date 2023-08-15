@@ -142,6 +142,7 @@ with col1:
 	                        st.session_state['generated'].append(output)   
 	                    elif len(st.session_state.ai) == 1:
 	                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
+	                        print(chat_history)
 	                        with get_openai_callback() as cb:
 	                        	response = chain({"question": user_input, "chat_history": chat_history})
 	                        print("CB:", cb)
@@ -160,7 +161,8 @@ with col1:
 	                        st.session_state['generated'].append(output)
 	                    else:
 	                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]
-	                        with get_openai_callback() as cb:
+	                        print(chat_history)	                        
+				with get_openai_callback() as cb:
 	                        	response = chain({"question": user_input, "chat_history": chat_history})
 	                        print("CB:", cb)
 	                        output = response['answer']
