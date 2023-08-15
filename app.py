@@ -127,7 +127,7 @@ with col1:
 	                        with get_openai_callback() as cb:
 	                        	response = chain({"question": user_input, "chat_history": []})
 	                        print("CB:", cb)
-				output = response['answer']
+	                        output = response['answer']
 	                        docs = response['source_documents']
 	                        raw_string = ''
 	                        for d in range(len(docs)):
