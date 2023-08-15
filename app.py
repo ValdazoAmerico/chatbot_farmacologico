@@ -162,7 +162,7 @@ with col1:
 	                    else:
 	                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]
 	                        print(chat_history)	                        
-				with get_openai_callback() as cb:
+	                        with get_openai_callback() as cb:
 	                        	response = chain({"question": user_input, "chat_history": chat_history})
 	                        print("CB:", cb)
 	                        output = response['answer']
