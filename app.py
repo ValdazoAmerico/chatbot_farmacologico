@@ -19,7 +19,7 @@ from langchain.prompts import (
     AIMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
-
+from langchain.callbacks import get_openai_callback
 
 if 'generated' not in st.session_state:
         st.session_state['generated'] = []
@@ -125,7 +125,10 @@ with col1:
 	                    docs = retriever.get_relevant_documents(user_input)
 	                    if len(st.session_state.ai) == 0:
 	                        response = chain({"question":user_input, "chat_history":[]})
-	                        output = response['answer']
+	                        with get_openai_callback() as cb:
+	                        	result = chain({"question": "cuales son las indicaciones para colocar un resincronizador ?", "chat_history": []})
+	                        print("CB:", cb)
+				output = response['answer']
 	                        docs = response['source_documents']
 	                        raw_string = ''
 	                        for d in range(len(docs)):
