@@ -52,7 +52,8 @@ embeddings = HypotheticalDocumentEmbedder(
 vectordb = FAISS.load_local('./faiss_index/', embeddings)
 print(vectordb)
 #retriever = vectordb.as_retriever(search_kwargs={"k": 3})
-
+retriever =vectordb.as_retriever()
+print(retriever)
 prompt=PromptTemplate(
     template="""Como médico cardiólogo especializado, te brindaré respuestas precisas y fundamentadas en el campo de la cardiología, basándome únicamente en la información proporcionada en el texto médico que me presentes. Mi objetivo es comportarme como un experto en cardiología y ofrecerte una asistencia confiable y precisa.
 
