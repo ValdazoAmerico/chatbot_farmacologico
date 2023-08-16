@@ -106,7 +106,8 @@ chain = ConversationalRetrievalChain(
 )
 
 chain.combine_docs_chain.llm_chain.prompt = chat_prompt
-
+response = chain({"question": "que es el enalapril?", "chat_history": []})
+print(response)
 st.title("CardioBot :hospital:")
 col1, col2 = st.columns(2)
 with col1:
