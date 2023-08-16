@@ -7,7 +7,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.llms import OpenAI
 from langchain.chains import LLMChain, HypotheticalDocumentEmbedder
 from langchain.chat_models import ChatOpenAI
-from langchain.vectorstores import FAISS
+from langchain.vectorstores import FAISS, Weaviate as WeaviateLangChain
 import logging
 from langchain.schema import Document
 from langchain.embeddings import OpenAIEmbeddings
@@ -20,6 +20,7 @@ from langchain.prompts import (
     HumanMessagePromptTemplate,
 )
 from langchain.callbacks import get_openai_callback
+import weaviate
 
 if 'generated' not in st.session_state:
         st.session_state['generated'] = []
@@ -49,7 +50,16 @@ embeddings = HypotheticalDocumentEmbedder(
     llm_chain=llm_chain, base_embeddings=base_embeddings
 )
 
-vectordb = FAISS.load_local('./faixx_index2/', embeddings)
+os.environ['WEAVIATE_URL']="https://my-book-test-jr7qrzyj.weaviate.network"
+
+auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
+
+client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
+        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
+        })
+
+vectordb = WeaviateLangChain(client=client,  index_name="ICC", text_key="content", embedding=embeddings)
+
 retriever = vectordb.as_retriever(search_kwargs={"k": 3})
 
 prompt=PromptTemplate(
