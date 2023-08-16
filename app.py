@@ -138,6 +138,7 @@ with col1:
 	                        with get_openai_callback() as cb:
 	                        	response = chain({"question": user_input, "chat_history": []})
 	                        print("CB:", cb)
+	                        print("response", response)
 	                        output = response['answer']
 	                        docs = response['source_documents']
 	                        print("docs", docs)
@@ -146,7 +147,7 @@ with col1:
 	                        	raw_string += f'Extracto {d+1}:\n'
 	                        	raw_string += docs[d].page_content.replace('\n', ' ')
 	                        	raw_string += '\n'
-	                        	raw_string += f"Página {str(docs[d].metadata['page'])}"
+	                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
 	                        	raw_string += '\n\n'
 	                        st.session_state['data'].append(raw_string)
 	                        st.session_state.ai.append(output)
@@ -166,7 +167,7 @@ with col1:
 	                        	raw_string += f'Extracto {d+1}:\n'
 	                        	raw_string += docs[d].page_content.replace('\n', ' ')
 	                        	raw_string += '\n'
-	                        	raw_string += f"Página {str(docs[d].metadata['page'])}"
+	                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
 	                        	raw_string += '\n\n'
 	                        st.session_state['data'].append(raw_string) 
 	                        st.session_state.ai.append(output)
@@ -185,7 +186,7 @@ with col1:
 	                        	raw_string += f'Extracto {d+1}:\n'
 	                        	raw_string += docs[d].page_content.replace('\n', ' ')
 	                        	raw_string += '\n'
-	                        	raw_string += f"Página {str(docs[d].metadata['page'])}"
+	                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
 	                        	raw_string += '\n\n'
 	                        st.session_state['data'].append(raw_string)
 	                        st.session_state.ai.append(output)
