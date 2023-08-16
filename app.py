@@ -106,8 +106,8 @@ chain = ConversationalRetrievalChain(
 )
 
 chain.combine_docs_chain.llm_chain.prompt = chat_prompt
-response = chain({"question": "que es el enalapril?", "chat_history": []})
-print(response)
+
+print(st.session_state)
 st.title("CardioBot :hospital:")
 col1, col2 = st.columns(2)
 with col1:
@@ -133,13 +133,14 @@ with col1:
 	            st.session_state['generated'].append('¡Hola! Soy CardioBot, una herramienta especializada para apoyar a los médicos en el análisis de textos relacionados con cardiología. Mi conocimiento se basa en información basada en evidencia científica sobre tratamientos y medicación en esta área.')
 	        else:
 	            try:
-	                    docs = retriever.get_relevant_documents(user_input)
+	                    #docs = retriever.get_relevant_documents(user_input)
 	                    if len(st.session_state.ai) == 0:
 	                        with get_openai_callback() as cb:
 	                        	response = chain({"question": user_input, "chat_history": []})
 	                        print("CB:", cb)
 	                        output = response['answer']
 	                        docs = response['source_documents']
+	                        print("docs", docs)
 	                        raw_string = ''
 	                        for d in range(len(docs)):
 	                        	raw_string += f'Extracto {d+1}:\n'
