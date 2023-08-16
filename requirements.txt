@@ -4,3 +4,4 @@ streamlit-scrollable-textbox==0.0.3
 streamlit-chat==0.1.1
 faiss-cpu==1.7.4
 tiktoken==0.4.0
+weaviate-client==3.22.1
