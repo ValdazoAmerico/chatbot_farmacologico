@@ -141,7 +141,6 @@ with col1:
 	            try:
 	                    #docs = retriever.get_relevant_documents(user_input)
 	                    if len(st.session_state.ai) == 0:
-	                        with get_openai_callback() as cb:
 	                        response = chain({"question": user_input, "chat_history": []})
 	                        output = response['answer']
 	                        docs = response['source_documents']
