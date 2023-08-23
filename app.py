@@ -77,7 +77,7 @@ prompt=PromptTemplate(
     template="""{question}""",
     input_variables=["question"],
 )
-human_message_prompt = SystemMessagePromptTemplate(prompt=prompt)
+human_message_prompt = HumanMessagePromptTemplate(prompt=prompt)
 
 chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
 
