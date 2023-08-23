@@ -110,7 +110,7 @@ def get_chain():
 	)
 	
 	chain.combine_docs_chain.llm_chain.prompt = chat_prompt
-    	return chain
+	return chain
 
 chain = get_chain()
 
