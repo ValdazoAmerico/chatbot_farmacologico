@@ -117,7 +117,8 @@ Pregunta independiente:"""
 	return chain
 
 chain = get_chain()
-
+response = chain({"question": "que es el enalapril?", "chat_history": []})
+print(response['answer'])
 st.title("CardioBot :hospital:")
 col1, col2 = st.columns(2)
 with col1:
