@@ -55,7 +55,6 @@ def get_chain():
 	)
 	
 	
-	
 	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
 	
 	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
@@ -67,12 +66,17 @@ def get_chain():
 	retriever = vectordb.as_retriever(search_kwargs={"k": 3})
 	
 	prompt=PromptTemplate(
-	    template="""Como médico cardiólogo especializado, te brindaré respuestas precisas y fundamentadas en el campo de la cardiología, basándome únicamente en la información proporcionada en el texto médico que me presentes. Mi objetivo es comportarme como un experto en cardiología y ofrecerte una asistencia confiable y precisa.
-	
-	No dudes en plantear cualquier pregunta relacionada con cardiología en función del contexto provisto, y estaré encantado de ayudarte y compartir mi conocimiento en este campo. Estoy comprometido a brindarte respuestas confiables y basadas en la evidencia médica presentada. En caso de desconocer la respuesta o no contar con información para responder la pregunta, diré 'No lo sé'.
-	----------------
-	{context}
-	----------------""",
+	    template="""Actúas como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
+
+Debes responder solo a preguntas relacionadas con cardiología en función del contexto proporcionado. Estás comprometido a brindar respuestas confiables y basadas en la evidencia médica presentada. En caso de desconocer la respuesta o no contar con información para responder la pregunta, simplemente dirás 'No lo sé'. No intentarás inventar una respuesta.
+
+----------------
+
+{context}
+
+----------------
+
+""",
 	    input_variables=["context"],
 	)
 	system_message_prompt = SystemMessagePromptTemplate(prompt=prompt)
