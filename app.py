@@ -20,6 +20,7 @@ from langchain.prompts import (
     HumanMessagePromptTemplate,
 )
 from langchain.callbacks import get_openai_callback
+from langchain.retrievers.weaviate_hybrid_search import WeaviateHybridSearchRetriever
 import weaviate
 
 if 'generated' not in st.session_state:
@@ -58,10 +59,16 @@ def get_chain():
 	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
 	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
 	        })
+	retriever = WeaviateHybridSearchRetriever(
+    	client=client,
+    	index_name="LangChain",
+    	text_key="text",
+    	attributes=[],
+    	create_schema_if_missing=True,
+)
+	#vectordb = WeaviateLangChain(client=client,  index_name="ICC", text_key="content", embedding=embeddings)
 	
-	vectordb = WeaviateLangChain(client=client,  index_name="ICC", text_key="content", embedding=embeddings)
-	
-	retriever = vectordb.as_retriever(search_kwargs={"k": 3})
+	#retriever = vectordb.as_retriever(search_kwargs={"k": 3})
 	
 	prompt=PromptTemplate(
 	    template="""Actúas como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
