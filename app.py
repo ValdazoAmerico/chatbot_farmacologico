@@ -37,8 +37,6 @@ if "temp" not in st.session_state:
 if 'data' not in st.session_state:
 	st.session_state['data'] = []
 
-os.environ['WEAVIATE_URL']="https://my-book-test-jr7qrzyj.weaviate.network"
-
 @st.cache_resource
 def get_chain():
 	base_embeddings = OpenAIEmbeddings()
