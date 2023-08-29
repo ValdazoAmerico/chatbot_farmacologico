@@ -89,10 +89,12 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 	
 	condense_template = """Dada la siguiente conversación y una pregunta de seguimiento, reformula la pregunta de seguimiento para que sea una pregunta independiente.
 	
-	Historial del chat:
-	{chat_history}
-	Entrada de seguimiento: {question}
-	Pregunta independiente:"""
+Conversación:
+{chat_history}
+
+Pregunta de seguimiento: {question}
+
+Pregunta independiente:"""
 	CONDENSE_QUESTION_PROMPT = PromptTemplate(template=condense_template, input_variables=["chat_history", "question"])
 	
 	llm = ChatOpenAI()
