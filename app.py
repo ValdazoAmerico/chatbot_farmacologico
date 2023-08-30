@@ -73,7 +73,7 @@ def get_chain():
 	prompt=PromptTemplate(
 	    template="""Actúas como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
 
-Debes responder solo a preguntas relacionadas con cardiología en función del contexto proporcionado. Estás comprometido a brindar respuestas confiables y basadas en la evidencia médica presentada. Mantén la respuesta breve y concisa. En caso de desconocer la respuesta o no contar con información para responder la pregunta, simplemente dirás 'No lo sé'. No intentarás inventar una respuesta. Mantén la respuesta breve y concisa.
+Debes responder solo a preguntas relacionadas con cardiología en función del contexto proporcionado. Estás comprometido a brindar respuestas confiables y basadas en la evidencia médica presentada. Mantén la respuesta breve y concisa. En caso de desconocer la respuesta o no contar con información para responder la pregunta, simplemente dirás 'No lo sé'. No intentarás inventar una respuesta.
 
 ----------------
 
@@ -87,6 +87,7 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 	system_message_prompt = SystemMessagePromptTemplate(prompt=prompt)
 	
 	prompt=PromptTemplate(
+	    template="""{question}""",
 	    input_variables=["question"],
 	)
 	human_message_prompt = HumanMessagePromptTemplate(prompt=prompt)
@@ -108,9 +109,9 @@ Pregunta independiente:"""
 	question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 	
 	llm2 = ChatOpenAI(temperature=0, verbose=True)
-	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=500)
+	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=200)
 	question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
-	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True, max_tokens=150)
+	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 	
 	chain = ConversationalRetrievalChain(
 	    retriever=retriever,
