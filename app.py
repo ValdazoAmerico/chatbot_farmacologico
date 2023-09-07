@@ -88,8 +88,8 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 			prompt=prompt)
 		if history:
 			response = conversation.predict(input=question, history=f"""Human: {history[0]}\nAI: {history[1]}""")
-   		else:
-     			response = conversation.predict(input=question)
+		else:
+			response = conversation.predict(input=question)
 	except:
 			print("16k tokens")
 			chat = ChatOpenAI(temperature=0, verbose=True, model='gpt-3.5-turbo-16k')
