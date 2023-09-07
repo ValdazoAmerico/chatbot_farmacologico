@@ -102,7 +102,7 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 		#memory.save_context({"input": st.session_state.past[-2]}, {"output": st.session_state.ai[-2]})
 		#memory.save_context({"input": st.session_state.past[-1]}, {"output": st.session_state.ai[-1]})
 
-
+	print("history",history)
 	try:
 		conversation = ConversationChain(
 			llm=chat,
@@ -183,6 +183,7 @@ if check_password():
 		            try:
 		                    #docs = retriever.get_relevant_documents(user_input)
 		                    if len(st.session_state.ai) == 0:
+		                        print("here 1")
 		                        output, raw_string = answer_question("question", [])
 		                        #response = chain({"question": user_input, "chat_history": []})
 		                        # output = response['answer']
@@ -199,6 +200,7 @@ if check_password():
 		                        st.session_state.past.append(user_input)
 		                        st.session_state['generated'].append(output)   
 		                    elif len(st.session_state.ai) == 1:
+		                        print("here 2")
 		                        chat_history = [st.session_state['past'][-1], st.session_state['generated'][-1]]
 		                        output, raw_string = answer_question("question", chat_history)
 		                        #response = chain({"question": user_input, "chat_history": chat_history})
