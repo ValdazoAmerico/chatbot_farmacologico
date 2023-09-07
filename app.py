@@ -182,7 +182,7 @@ if check_password():
 		            try:
 		                    #docs = retriever.get_relevant_documents(user_input)
 		                    if len(st.session_state.ai) == 0:
-					output, raw_string = answer_question("question", [])
+		                        output, raw_string = answer_question("question", [])
 		                        #response = chain({"question": user_input, "chat_history": []})
 		                        # output = response['answer']
 		                        # docs = response['source_documents']
@@ -199,7 +199,7 @@ if check_password():
 		                        st.session_state['generated'].append(output)   
 		                    elif len(st.session_state.ai) == 1:
 		                        chat_history = [st.session_state['past'][-1], st.session_state['generated'][-1]]
-					output, raw_string = answer_question("question", chat_history)
+		                        output, raw_string = answer_question("question", chat_history)
 		                        #response = chain({"question": user_input, "chat_history": chat_history})
 		                        # output = response['answer']
 		                        # docs = response['source_documents']   
