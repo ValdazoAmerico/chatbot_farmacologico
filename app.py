@@ -153,8 +153,6 @@ def check_password():
         return True
 if check_password():
 	
-	chain = get_chain()
-	
 	st.title("CardioBot :hospital:")
 	col1, col2 = st.columns(2)
 	with col1:
