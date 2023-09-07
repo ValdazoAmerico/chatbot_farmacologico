@@ -21,6 +21,8 @@ from langchain.prompts import (
 )
 from langchain.callbacks import get_openai_callback
 from langchain.retrievers.weaviate_hybrid_search import WeaviateHybridSearchRetriever
+from langchain.chains import ConversationChain
+
 import weaviate
 
 if 'generated' not in st.session_state:
