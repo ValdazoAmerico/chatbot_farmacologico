@@ -154,8 +154,7 @@ def check_password():
     else:
         # Password correct.
         return True
-res = answer_question("que es enalapril?", [])
-print(res)
+
 if check_password():
 	st.title("CardioBot :hospital:")
 	col1, col2 = st.columns(2)
