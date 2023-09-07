@@ -67,7 +67,8 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 
 ----------------
 
-"""	chat_template = default_template + """{history}
+"""	
+	chat_template = default_template + """{history}
 {input}"""
 
 	prompt = PromptTemplate(input_variables=["history", "input"], template=chat_template)
