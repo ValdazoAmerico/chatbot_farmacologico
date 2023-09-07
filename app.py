@@ -106,7 +106,7 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 	try:
 		conversation = ConversationChain(
 			llm=chat,
-			verbose=True,
+			verbose=False,
 			prompt=prompt)
 		if history:
 			response = conversation.predict(input=question, history=f"""Human: {history[0]}\nAI: {history[1]}""")
@@ -117,12 +117,14 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 			chat = ChatOpenAI(temperature=0, verbose=True, model='gpt-3.5-turbo-16k')
 			conversation = ConversationChain(
 				llm=chat,
-				verbose=True,
+				verbose=False,
 				prompt=prompt)
 			if history:
 				response = conversation.predict(input=question, history=f"""Human: {history[0]}\nAI: {history[1]}""")
+				print("response history", response)
 			else:
 				response = conversation.predict(input=question)
+				print("response NO history", response)
 
 
 	return response
