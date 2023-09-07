@@ -56,8 +56,6 @@ retriever = WeaviateHybridSearchRetriever(
     	attributes=[]
 )
 
-res = answer_question("que es enalapril?", [])
-print(res)
 def ask(context, question, history):
 
 	default_template = f"""Actúa como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
@@ -154,6 +152,8 @@ def check_password():
     else:
         # Password correct.
         return True
+res = answer_question("que es enalapril?", [])
+print(res)
 if check_password():
 	st.title("CardioBot :hospital:")
 	col1, col2 = st.columns(2)
