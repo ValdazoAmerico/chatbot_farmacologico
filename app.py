@@ -56,6 +56,25 @@ retriever = WeaviateHybridSearchRetriever(
     	attributes=[]
 )
 
+def answer_question(question, history):
+      query_result = (
+      client.query
+      .get("Evicardio", ["content", "keywords"])
+      .with_bm25(question)
+      .with_limit(4)
+      .do()
+  )
+      res = retriever.get_relevant_documents(question)
+
+      arr=[]
+      for r in res:
+        arr.append(r.page_content)
+
+      for r in query_result['data']['Get']['Evicardio']:
+        arr.append(r['content'])
+      print("len", len("\n\n".join(arr)))
+      return ask("\n\n".join(arr),question, history), "\n\n".join(arr)
+
 def ask(context, question, history):
 
 	default_template = f"""Actúa como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
@@ -105,25 +124,6 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 
 
 	return response
-
-def answer_question(question, history):
-      query_result = (
-      client.query
-      .get("Evicardio", ["content", "keywords"])
-      .with_bm25(question)
-      .with_limit(4)
-      .do()
-  )
-      res = retriever.get_relevant_documents(question)
-
-      arr=[]
-      for r in res:
-        arr.append(r.page_content)
-
-      for r in query_result['data']['Get']['Evicardio']:
-        arr.append(r['content'])
-      print("len", len("\n\n".join(arr)))
-      return ask("\n\n".join(arr),question, history), "\n\n".join(arr)
 
 def check_password():
     """Returns `True` if the user had the correct password."""
