@@ -186,7 +186,7 @@ if check_password():
 		                    #docs = retriever.get_relevant_documents(user_input)
 		                    if len(st.session_state.ai) == 0:
 		                        print("here 1")
-		                        output, raw_string = answer_question("question", [])
+		                        output, raw_string = answer_question(user_input, [])
 		                        #response = chain({"question": user_input, "chat_history": []})
 		                        # output = response['answer']
 		                        # docs = response['source_documents']
