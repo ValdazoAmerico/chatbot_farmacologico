@@ -109,7 +109,7 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 			verbose=False,
 			prompt=prompt)
 		if history:
-			response = conversation.predict(input=question, history=f"""Human: {history[0]}\nAI: {history[1]}""")
+			response = conversation.predict(input=question, history=chat_history)
 		else:
 			response = conversation.predict(input=question)
 	except:
@@ -120,7 +120,7 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 				verbose=False,
 				prompt=prompt)
 			if history:
-				response = conversation.predict(input=question, history=f"""Human: {history[0]}\nAI: {history[1]}""")
+				response = conversation.predict(input=question, history=chat_history)
 				print("response history", response)
 			else:
 				response = conversation.predict(input=question)
@@ -203,8 +203,8 @@ if check_password():
 		                        st.session_state['generated'].append(output)   
 		                    elif len(st.session_state.ai) == 1:
 		                        print("here 2")
-		                        chat_history = [st.session_state['past'][-1], st.session_state['generated'][-1]]
-		                        output, raw_string = answer_question("question", chat_history)
+		                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
+		                        output, raw_string = answer_question(user_input, chat_history)
 		                        #response = chain({"question": user_input, "chat_history": chat_history})
 		                        # output = response['answer']
 		                        # docs = response['source_documents']   
