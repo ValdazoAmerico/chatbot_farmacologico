@@ -100,11 +100,11 @@ Pregunta de seguimiento: {question}
 Pregunta independiente:"""
 CONDENSE_QUESTION_PROMPT = PromptTemplate(template=condense_template, input_variables=["chat_history", "question"])
 	
-llm = ChatOpenAI(temperature=0, verbose=True, model='gpt-3.5-turbo')
+llm = ChatOpenAI(temperature=0, verbose=True)
 	
 question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 	
-llm3 = ChatOpenAI(temperature=0, verbose=True)
+llm3 = ChatOpenAI(temperature=0, verbose=True, , model='gpt-3.5-turbo')
 
 doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 	
