@@ -66,7 +66,9 @@ def get_chain():
     	attributes=[],
     	create_schema_if_missing=True,
 )
-	retriever.alpha = 0
+	retriever2.alpha = 0
+	retriever.k=2
+	retriever2.k=2
 	lotr = MergerRetriever(retrievers=[retriever, retriever2])
 	
 	prompt=PromptTemplate(
@@ -108,7 +110,7 @@ Pregunta independiente:"""
 	question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 	
 	llm2 = ChatOpenAI(temperature=0, verbose=True)
-	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=500, model='gpt-3.5-turbo-16k')
+	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=500, model='gpt-3.5-turbo')
 	question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
 	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 	
