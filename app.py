@@ -66,9 +66,7 @@ retriever2 = WeaviateHybridSearchRetriever(
 retriever.alpha = 0
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
 
-@st.cache_resource
-def get_chain():
-	prompt=PromptTemplate(
+prompt=PromptTemplate(
 	    template="""Actúa como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
 
 Debes responder solo a preguntas relacionadas con cardiología en función del contexto proporcionado. Estás comprometido a brindar respuestas confiables y basadas en la evidencia médica presentada. Mantén la respuesta breve y concisa. En caso de desconocer la respuesta o no contar con información para responder la pregunta, simplemente dirás 'No lo sé'. No intentarás inventar una respuesta.
@@ -82,17 +80,17 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 """,
 	    input_variables=["context"],
 	)
-	system_message_prompt = SystemMessagePromptTemplate(prompt=prompt)
+system_message_prompt = SystemMessagePromptTemplate(prompt=prompt)
 	
-	prompt=PromptTemplate(
+prompt=PromptTemplate(
 	    template="""{question}""",
 	    input_variables=["question"],
 	)
-	human_message_prompt = HumanMessagePromptTemplate(prompt=prompt)
+human_message_prompt = HumanMessagePromptTemplate(prompt=prompt)
 	
-	chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
+chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
 	
-	condense_template = """Dada la siguiente conversación y una pregunta de seguimiento, reformula la pregunta de seguimiento para que sea una pregunta independiente.
+condense_template = """Dada la siguiente conversación y una pregunta de seguimiento, reformula la pregunta de seguimiento para que sea una pregunta independiente.
 	
 Conversación:
 {chat_history}
@@ -100,26 +98,24 @@ Conversación:
 Pregunta de seguimiento: {question}
 
 Pregunta independiente:"""
-	CONDENSE_QUESTION_PROMPT = PromptTemplate(template=condense_template, input_variables=["chat_history", "question"])
+CONDENSE_QUESTION_PROMPT = PromptTemplate(template=condense_template, input_variables=["chat_history", "question"])
 	
-	llm = ChatOpenAI()
+llm = ChatOpenAI()
 	
-	question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
+question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 	
-	llm2 = ChatOpenAI(temperature=0, verbose=True)
-	llm3 = ChatOpenAI(temperature=0, verbose=True)
-	question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
-	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
+llm3 = ChatOpenAI(temperature=0, verbose=True)
+
+doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 	
-	chain = ConversationalRetrievalChain(
+chain = ConversationalRetrievalChain(
 	    retriever=lotr,
 	    question_generator=question_generator,
 	    combine_docs_chain=doc_chain,
 	    verbose=True, return_source_documents=True
 	)
 	
-	chain.combine_docs_chain.llm_chain.prompt = chat_prompt
-	return chain
+chain.combine_docs_chain.llm_chain.prompt = chat_prompt
 	
 def check_password():
     """Returns `True` if the user had the correct password."""
@@ -149,9 +145,6 @@ def check_password():
         # Password correct.
         return True
 if check_password():
-	
-	chain = get_chain()
-	
 	st.title("CardioBot :hospital:")
 	col1, col2 = st.columns(2)
 	with col1:
