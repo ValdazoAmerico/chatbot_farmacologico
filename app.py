@@ -239,6 +239,5 @@ if check_password():
 			patient_data = "‎ "
 		else:
 			patient_data = st.session_state['data'][-1]
-		if patient_data:
-			st.subheader("Información de contexto:")
-			stx.scrollableTextbox(patient_data,height = 350)
+		st.subheader("Información de contexto:")
+		stx.scrollableTextbox(patient_data)
