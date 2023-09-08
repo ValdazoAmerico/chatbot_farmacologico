@@ -149,10 +149,11 @@ def check_password():
     else:
         # Password correct.
         return True
-chain = get_chain()
-print(chain({"question":"que son los iecas", "chat_history":[]}))
+
 if check_password():
 		chain = get_chain()
+		response = chain({"question": user_input, "chat_history": []})
+		print(response)
 	
 		st.title("CardioBot :hospital:")
 
