@@ -189,6 +189,8 @@ if check_password():
 		                        	raw_string += '\n'
 		                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
 		                        	raw_string += '\n\n'
+		                        print(docs)
+		                        print("DOCS")
 		                        st.session_state['data'].append(raw_string)
 		                        st.session_state.ai.append(output)
 		                        st.session_state.past.append(user_input)
