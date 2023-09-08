@@ -23,21 +23,6 @@ from langchain.callbacks import get_openai_callback
 from langchain.retrievers.weaviate_hybrid_search import WeaviateHybridSearchRetriever
 import weaviate
 
-if 'generated' not in st.session_state:
-        st.session_state['generated'] = []
-
-if 'past' not in st.session_state:
-        st.session_state['past'] = []
-        
-if 'ai' not in st.session_state:
-        st.session_state['ai'] = []
-
-if "temp" not in st.session_state:
-	st.session_state["temp"] = ""
-
-if 'data' not in st.session_state:
-	st.session_state['data'] = []
-
 @st.cache_resource
 def get_chain():
 	base_embeddings = OpenAIEmbeddings()
@@ -151,6 +136,20 @@ def check_password():
         # Password correct.
         return True
 if check_password():
+		if 'generated' not in st.session_state:
+			st.session_state['generated'] = []
+
+		if 'past' not in st.session_state:
+			st.session_state['past'] = []
+        
+		if 'ai' not in st.session_state:
+			st.session_state['ai'] = []
+
+		if "temp" not in st.session_state:
+			st.session_state["temp"] = ""
+
+		if 'data' not in st.session_state:
+			st.session_state['data'] = []
 	
 		chain = get_chain()
 	
