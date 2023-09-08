@@ -39,35 +39,35 @@ if "temp" not in st.session_state:
 if 'data' not in st.session_state:
 	st.session_state['data'] = []
 
-@st.cache_resource
-def get_chain():
-	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
+auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
 	
-	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
+client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
 	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
 	        })
-	retriever = WeaviateHybridSearchRetriever(
+retriever = WeaviateHybridSearchRetriever(
     	client=client,
     	index_name="LangChain",
     	text_key="text",
     	attributes=[],
     	create_schema_if_missing=True,
 )
-	auth_config2 = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY2'])
+auth_config2 = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY2'])
 	
-	client2 = weaviate.Client(url=os.environ['WEAVIATE_URL2'], auth_client_secret=auth_config2, additional_headers={
+client2 = weaviate.Client(url=os.environ['WEAVIATE_URL2'], auth_client_secret=auth_config2, additional_headers={
 	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
 	        })
-	retriever2 = WeaviateHybridSearchRetriever(
+retriever2 = WeaviateHybridSearchRetriever(
     	client=client2,
     	index_name="Evicardio",
     	text_key="content",
     	attributes=[],
     	create_schema_if_missing=True,
 )
-	retriever.alpha = 0
-	lotr = MergerRetriever(retrievers=[retriever, retriever2])
-	
+retriever.alpha = 0
+lotr = MergerRetriever(retrievers=[retriever, retriever2])
+
+@st.cache_resource
+def get_chain():
 	prompt=PromptTemplate(
 	    template="""Actúa como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
 
@@ -183,7 +183,7 @@ if check_password():
 		                        output = response['answer']
 		                        docs = response['source_documents']
 		                        raw_string = ''
-		                        for d in range(len(docs[:2])):
+		                        for d in range(len(docs)):
 		                        	raw_string += f'Extracto {d+1}:\n'
 		                        	raw_string += docs[d].page_content.replace('\n', ' ')
 		                        	raw_string += '\n'
