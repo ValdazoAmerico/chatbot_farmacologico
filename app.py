@@ -53,9 +53,9 @@ def get_chain():
 	)
 	
 	
-	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
+	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY2'])
 	
-	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
+	client = weaviate.Client(url=os.environ['WEAVIATE_URL2'], auth_client_secret=auth_config, additional_headers={
 	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
 	        })
 	retriever = WeaviateHybridSearchRetriever(
