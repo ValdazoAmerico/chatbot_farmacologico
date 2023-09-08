@@ -155,8 +155,7 @@ if check_password():
 	chain = get_chain()
 	
 	st.title("CardioBot :hospital:")
-	col1, col2 = st.rows(2)
-	with col1:
+
 		def clear_text():
 			st.session_state["temp"] = st.session_state["text"]
 			st.session_state["text"] = ""
@@ -235,7 +234,7 @@ if check_password():
 		            message(st.session_state["generated"][i], key=str(i))
 		            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
 	
-	with col2:
+
 		if not st.session_state['data']:
 			patient_data = "‎ "
 		else:
