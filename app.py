@@ -60,7 +60,7 @@ def get_chain():
 	        })
 	retriever2 = WeaviateHybridSearchRetriever(
     	client=client2,
-    	index_name="Evicardio"
+    	index_name="Evicardio",
     	text_key="content",
     	attributes=[],
     	create_schema_if_missing=True,
