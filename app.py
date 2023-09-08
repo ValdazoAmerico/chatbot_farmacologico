@@ -107,7 +107,7 @@ Pregunta independiente:"""
 	question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 	
 	llm2 = ChatOpenAI(temperature=0, verbose=True)
-	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=200)
+	llm3 = ChatOpenAI(temperature=0, verbose=True)
 	question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
 	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 	
@@ -179,20 +179,22 @@ if check_password():
 		            try:
 		                    #docs = retriever.get_relevant_documents(user_input)
 		                    if len(st.session_state.ai) == 0:
-		                        response = chain({"question": user_input, "chat_history": []})
-		                        output = response['answer']
-		                        docs = response['source_documents']
-		                        raw_string = ''
-		                        for d in range(len(docs)):
-		                        	raw_string += f'Extracto {d+1}:\n'
-		                        	raw_string += docs[d].page_content.replace('\n', ' ')
-		                        	raw_string += '\n'
-		                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
-		                        	raw_string += '\n\n'
-		                        st.session_state['data'].append(raw_string)
-		                        st.session_state.ai.append(output)
-		                        st.session_state.past.append(user_input)
-		                        st.session_state['generated'].append(output)   
+					with get_openai_callback() as cb:
+			                        response = chain({"question": user_input, "chat_history": []})
+			                        output = response['answer']
+			                        docs = response['source_documents']
+			                        raw_string = ''
+			                        for d in range(len(docs)):
+			                        	raw_string += f'Extracto {d+1}:\n'
+			                        	raw_string += docs[d].page_content.replace('\n', ' ')
+			                        	raw_string += '\n'
+			                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
+			                        	raw_string += '\n\n'
+			                        st.session_state['data'].append(raw_string)
+			                        st.session_state.ai.append(output)
+			                        st.session_state.past.append(user_input)
+			                        st.session_state['generated'].append(output)
+						print("CB", cb)
 		                    elif len(st.session_state.ai) == 1:
 		                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 		                        response = chain({"question": user_input, "chat_history": chat_history})
