@@ -22,6 +22,7 @@ from langchain.prompts import (
 from langchain.callbacks import get_openai_callback
 from langchain.retrievers.weaviate_hybrid_search import WeaviateHybridSearchRetriever
 import weaviate
+from langchain.retrievers.merger_retriever import MergerRetriever
 
 if 'generated' not in st.session_state:
         st.session_state['generated'] = []
@@ -40,20 +41,6 @@ if 'data' not in st.session_state:
 
 @st.cache_resource
 def get_chain():
-	base_embeddings = OpenAIEmbeddings()
-	llm_hyde = OpenAI()
-	
-	prompt_template = """Redacta un fragmento de un artículo científico para responder a la pregunta.
-	Pregunta: {question}
-	Respuesta:"""
-	prompt = PromptTemplate(input_variables=["question"], template=prompt_template)
-	llm_chain = LLMChain(llm=llm_hyde, prompt=prompt)
-	
-	embeddings = HypotheticalDocumentEmbedder(
-	    llm_chain=llm_chain, base_embeddings=base_embeddings
-	)
-	
-	
 	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
 	
 	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
@@ -66,9 +53,20 @@ def get_chain():
     	attributes=[],
     	create_schema_if_missing=True,
 )
-	#vectordb = WeaviateLangChain(client=client,  index_name="ICC", text_key="content", embedding=embeddings)
+	auth_config2 = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY2'])
 	
-	#retriever = vectordb.as_retriever(search_kwargs={"k": 3})
+	client2 = weaviate.Client(url=os.environ['WEAVIATE_URL2'], auth_client_secret=auth_config2, additional_headers={
+	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
+	        })
+	retriever2 = WeaviateHybridSearchRetriever(
+    	client=client2,
+    	index_name="Evicardio",
+    	text_key="content",
+    	attributes=[],
+    	create_schema_if_missing=True,
+)
+	retriever.alpha = 0
+	lotr = MergerRetriever(retrievers=[retriever, retriever2])
 	
 	prompt=PromptTemplate(
 	    template="""Actúa como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
@@ -109,12 +107,12 @@ Pregunta independiente:"""
 	question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 	
 	llm2 = ChatOpenAI(temperature=0, verbose=True)
-	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=200)
+	llm3 = ChatOpenAI(temperature=0, verbose=True)
 	question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
 	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 	
 	chain = ConversationalRetrievalChain(
-	    retriever=retriever,
+	    retriever=lotr,
 	    question_generator=question_generator,
 	    combine_docs_chain=doc_chain,
 	    verbose=True, return_source_documents=True
@@ -185,7 +183,7 @@ if check_password():
 		                        output = response['answer']
 		                        docs = response['source_documents']
 		                        raw_string = ''
-		                        for d in range(len(docs)):
+		                        for d in range(len(docs[:2])):
 		                        	raw_string += f'Extracto {d+1}:\n'
 		                        	raw_string += docs[d].page_content.replace('\n', ' ')
 		                        	raw_string += '\n'
@@ -194,7 +192,7 @@ if check_password():
 		                        st.session_state['data'].append(raw_string)
 		                        st.session_state.ai.append(output)
 		                        st.session_state.past.append(user_input)
-		                        st.session_state['generated'].append(output)   
+		                        st.session_state['generated'].append(output)
 		                    elif len(st.session_state.ai) == 1:
 		                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 		                        response = chain({"question": user_input, "chat_history": chat_history})
