@@ -184,7 +184,7 @@ if check_password():
 			                        output = response['answer']
 			                        docs = response['source_documents']
 			                        raw_string = ''
-			                        for d in range(len(docs)):
+			                        for d in range(len(docs[:2])):
 			                        	raw_string += f'Extracto {d+1}:\n'
 			                        	raw_string += docs[d].page_content.replace('\n', ' ')
 			                        	raw_string += '\n'
