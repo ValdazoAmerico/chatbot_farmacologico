@@ -66,9 +66,7 @@ def get_chain():
     	attributes=[],
     	create_schema_if_missing=True,
 )
-	retriever2.alpha = 0
-	retriever.k=2
-	retriever2.k=2
+	retriever.alpha = 0
 	lotr = MergerRetriever(retrievers=[retriever, retriever2])
 	
 	prompt=PromptTemplate(
@@ -110,7 +108,7 @@ Pregunta independiente:"""
 	question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 	
 	llm2 = ChatOpenAI(temperature=0, verbose=True)
-	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=500)
+	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=500, model='gpt-3.5-turbo-16k')
 	question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
 	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 	
@@ -154,11 +152,8 @@ def check_password():
 
 if check_password():
 		chain = get_chain()
-		try:
-			response = chain({"question": "que es el enalapril", "chat_history": []})
-			print(response)
-		except Exception as e:
-			print(e)
+		#response = chain({"question": "que es el enalapril", "chat_history": []})
+		#print(response)
 	
 		st.title("CardioBot :hospital:")
 
