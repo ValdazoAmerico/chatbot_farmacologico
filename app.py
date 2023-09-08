@@ -65,7 +65,7 @@ retriever2 = WeaviateHybridSearchRetriever(
 )
 retriever.alpha = 0
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
-
+print(lotr.get_relevant_documents("enalapril"))
 prompt=PromptTemplate(
 	    template="""Actúa como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
 
