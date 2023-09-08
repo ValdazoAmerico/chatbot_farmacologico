@@ -152,9 +152,9 @@ def check_password():
         return True
 if check_password():
 	
-	chain = get_chain()
+		chain = get_chain()
 	
-	st.title("CardioBot :hospital:")
+		st.title("CardioBot :hospital:")
 
 		def clear_text():
 			st.session_state["temp"] = st.session_state["text"]
