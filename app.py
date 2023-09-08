@@ -46,20 +46,21 @@ def get_chain():
 	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
 	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
 	        })
-	retriever = WeaviateHybridSearchRetriever(
-    	client=client,
-    	index_name="LangChain",
-    	text_key="text",
-    	attributes=[],
-    	create_schema_if_missing=True,
-)
 	auth_config2 = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY2'])
 	
 	client2 = weaviate.Client(url=os.environ['WEAVIATE_URL2'], auth_client_secret=auth_config2, additional_headers={
 	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
 	        })
-	retriever2 = WeaviateHybridSearchRetriever(
+	retriever = WeaviateHybridSearchRetriever(
     	client=client2,
+    	index_name="LangChain",
+    	text_key="text",
+    	attributes=[],
+    	create_schema_if_missing=True,
+)
+
+	retriever2 = WeaviateHybridSearchRetriever(
+    	client=client,
     	index_name="Evicardio",
     	text_key="content",
     	attributes=[],
