@@ -99,7 +99,7 @@ Pregunta independiente:"""
 	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 	
 	chain = ConversationalRetrievalChain(
-	    retriever=lotr,
+	    retriever=retriever,
 	    question_generator=question_generator,
 	    combine_docs_chain=doc_chain,
 	    verbose=True, return_source_documents=True
