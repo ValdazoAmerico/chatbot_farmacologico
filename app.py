@@ -67,7 +67,7 @@ def get_chain():
     	create_schema_if_missing=True,
 )
 	retriever2.alpha = 0
-	retriever.k=1
+	retriever.k=2
 	retriever2.k=2
 	lotr = MergerRetriever(retrievers=[retriever, retriever2])
 	
@@ -245,4 +245,4 @@ if check_password():
 		else:
 			patient_data = " "
 		st.subheader("Información de contexto:")
-		stx.scrollableTextbox(patient_data)
+		stx.scrollableTextbox(patient_data,height = 500)
