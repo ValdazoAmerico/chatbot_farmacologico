@@ -194,7 +194,7 @@ if check_password():
 			                        st.session_state.ai.append(output)
 			                        st.session_state.past.append(user_input)
 			                        st.session_state['generated'].append(output)
-						print("CB", cb)
+			                        print("CB", cb)
 		                    elif len(st.session_state.ai) == 1:
 		                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 		                        response = chain({"question": user_input, "chat_history": chat_history})
