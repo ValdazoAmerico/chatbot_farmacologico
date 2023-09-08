@@ -156,9 +156,9 @@ if check_password():
 		chain = get_chain()
 		try:
 			response = chain({"question": "que es el enalapril", "chat_history": []})
+			print(response)
 		except Exception as e:
 			print(e)
-		print(response)
 	
 		st.title("CardioBot :hospital:")
 
