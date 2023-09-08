@@ -99,7 +99,7 @@ Pregunta independiente:"""
 	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 	
 	chain = ConversationalRetrievalChain(
-	    retriever=retriever,
+	    retriever=lotr,
 	    question_generator=question_generator,
 	    combine_docs_chain=doc_chain,
 	    verbose=True, return_source_documents=True
@@ -177,11 +177,11 @@ if check_password():
 		            st.session_state['generated'].append('¡Hola! Soy CardioBot, una herramienta especializada para apoyar a los médicos en el análisis de textos relacionados con cardiología. Mi conocimiento se basa en información basada en evidencia científica sobre tratamientos y medicación en esta área.')
 		        else:
 		            try:
-		                    #docs = retriever.get_relevant_documents(user_input)
+		                    docs = lotr.get_relevant_documents(user_input)
 		                    if len(st.session_state.ai) == 0:
 		                        response = chain({"question": user_input, "chat_history": []})
 		                        output = response['answer']
-		                        docs = response['source_documents']
+		                        #docs = response['source_documents']
 		                        raw_string = ''
 		                        for d in range(len(docs)):
 		                        	raw_string += f'Extracto {d+1}:\n'
@@ -199,7 +199,7 @@ if check_password():
 		                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 		                        response = chain({"question": user_input, "chat_history": chat_history})
 		                        output = response['answer']
-		                        docs = response['source_documents']   
+		                        #docs = response['source_documents']   
 		                        raw_string = ''
 		                        for d in range(len(docs)):
 		                        	raw_string += f'Extracto {d+1}:\n'
@@ -215,7 +215,7 @@ if check_password():
 		                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]                
 		                        response = chain({"question": user_input, "chat_history": chat_history})
 		                        output = response['answer']
-		                        docs = response['source_documents']
+		                        #docs = response['source_documents']
 		                        raw_string = ''
 		                        for d in range(len(docs)):
 		                        	raw_string += f'Extracto {d+1}:\n'
