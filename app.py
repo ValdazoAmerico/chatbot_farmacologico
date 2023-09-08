@@ -66,7 +66,7 @@ def get_chain():
     	attributes=[],
     	create_schema_if_missing=True,
 )
-	retriever.alpha = 0
+	retriever2.alpha = 0
 	retriever.k=1
 	retriever2.k=2
 	lotr = MergerRetriever(retrievers=[retriever, retriever2])
