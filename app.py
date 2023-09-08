@@ -110,7 +110,7 @@ Pregunta independiente:"""
 	question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 	
 	llm2 = ChatOpenAI(temperature=0, verbose=True)
-	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=500, model='gpt-3.5-turbo')
+	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=500)
 	question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
 	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 	
