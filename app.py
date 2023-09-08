@@ -41,20 +41,6 @@ if 'data' not in st.session_state:
 
 @st.cache_resource
 def get_chain():
-	base_embeddings = OpenAIEmbeddings()
-	llm_hyde = OpenAI()
-	
-	prompt_template = """Redacta un fragmento de un artículo científico para responder a la pregunta.
-	Pregunta: {question}
-	Respuesta:"""
-	prompt = PromptTemplate(input_variables=["question"], template=prompt_template)
-	llm_chain = LLMChain(llm=llm_hyde, prompt=prompt)
-	
-	embeddings = HypotheticalDocumentEmbedder(
-	    llm_chain=llm_chain, base_embeddings=base_embeddings
-	)
-	
-	
 	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
 	
 	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
