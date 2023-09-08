@@ -37,6 +37,8 @@ if "temp" not in st.session_state:
 
 if 'data' not in st.session_state:
 	st.session_state['data'] = []
+print("st.session_state")
+print(st.session_state)
 
 @st.cache_resource
 def get_chain():
