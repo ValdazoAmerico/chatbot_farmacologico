@@ -21,9 +21,8 @@ from langchain.prompts import (
 )
 from langchain.callbacks import get_openai_callback
 from langchain.retrievers.weaviate_hybrid_search import WeaviateHybridSearchRetriever
-from langchain.chains import ConversationChain
-
 import weaviate
+from langchain.retrievers.merger_retriever import MergerRetriever
 
 if 'generated' not in st.session_state:
         st.session_state['generated'] = []
@@ -40,46 +39,51 @@ if "temp" not in st.session_state:
 if 'data' not in st.session_state:
 	st.session_state['data'] = []
 
-auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
+@st.cache_resource
+def get_chain():
+	base_embeddings = OpenAIEmbeddings()
+	llm_hyde = OpenAI()
 	
-client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
+	prompt_template = """Redacta un fragmento de un artículo científico para responder a la pregunta.
+	Pregunta: {question}
+	Respuesta:"""
+	prompt = PromptTemplate(input_variables=["question"], template=prompt_template)
+	llm_chain = LLMChain(llm=llm_hyde, prompt=prompt)
+	
+	embeddings = HypotheticalDocumentEmbedder(
+	    llm_chain=llm_chain, base_embeddings=base_embeddings
+	)
+	
+	
+	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
+	
+	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
 	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
 	        })
-auth_config2 = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY2'])
-	
-client2 = weaviate.Client(url=os.environ['WEAVIATE_URL2'], auth_client_secret=auth_config2, additional_headers={
-	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
-	        })
-
-retriever = WeaviateHybridSearchRetriever(
-    	client=client2,
+	retriever = WeaviateHybridSearchRetriever(
+    	client=client,
     	index_name="LangChain",
     	text_key="text",
-    	attributes=[]
+    	attributes=[],
+    	create_schema_if_missing=True,
 )
-
-def answer_question(question, history):
-      query_result = (
-      client.query
-      .get("Evicardio", ["content", "keywords"])
-      .with_bm25(question)
-      .with_limit(4)
-      .do()
-  )
-      res = retriever.get_relevant_documents(question)
-
-      arr=[]
-      for r in res:
-        arr.append(r.page_content)
-
-      for r in query_result['data']['Get']['Evicardio']:
-        arr.append(r['content'])
-      print("len", len("\n\n".join(arr)))
-      return ask("\n\n".join(arr),question, history), "\n\n".join(arr)
-
-def ask(context, question, history):
-
-	default_template = f"""Actúa como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
+	auth_config2 = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY2'])
+	
+	client2 = weaviate.Client(url=os.environ['WEAVIATE_URL2'], auth_client_secret=auth_config, additional_headers={
+	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
+	        })
+	retriever2 = WeaviateHybridSearchRetriever(
+    	client=client2,
+    	index_name="Evicardio"
+    	text_key="content",
+    	attributes=[],
+    	create_schema_if_missing=True,
+)
+	retriever.alpha = 0
+	lotr = MergerRetriever(retrievers=[retriever, retriever2])
+	
+	prompt=PromptTemplate(
+	    template="""Actúa como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
 
 Debes responder solo a preguntas relacionadas con cardiología en función del contexto proporcionado. Estás comprometido a brindar respuestas confiables y basadas en la evidencia médica presentada. Mantén la respuesta breve y concisa. En caso de desconocer la respuesta o no contar con información para responder la pregunta, simplemente dirás 'No lo sé'. No intentarás inventar una respuesta.
 
@@ -89,46 +93,48 @@ Debes responder solo a preguntas relacionadas con cardiología en función del c
 
 ----------------
 
-"""	
-	chat_template = default_template + """{history}
-{input}"""
+""",
+	    input_variables=["context"],
+	)
+	system_message_prompt = SystemMessagePromptTemplate(prompt=prompt)
+	
+	prompt=PromptTemplate(
+	    template="""{question}""",
+	    input_variables=["question"],
+	)
+	human_message_prompt = HumanMessagePromptTemplate(prompt=prompt)
+	
+	chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
+	
+	condense_template = """Dada la siguiente conversación y una pregunta de seguimiento, reformula la pregunta de seguimiento para que sea una pregunta independiente.
+	
+Conversación:
+{chat_history}
 
-	prompt = PromptTemplate(input_variables=["history", "input"], template=chat_template)
-	chat = ChatOpenAI(temperature=0, verbose=True)
-	#memory = ConversationBufferWindowMemory(k=2)
-	#if len(st.session_state.ai) == 1:
-		#memory.save_context({"input": st.session_state.past[-1]}, {"output": st.session_state.ai[0]})
-	#if len(st.session_state.ai) > 1:
-		#memory.save_context({"input": st.session_state.past[-2]}, {"output": st.session_state.ai[-2]})
-		#memory.save_context({"input": st.session_state.past[-1]}, {"output": st.session_state.ai[-1]})
+Pregunta de seguimiento: {question}
 
-	print("history",history)
-	try:
-		conversation = ConversationChain(
-			llm=chat,
-			verbose=False,
-			prompt=prompt)
-		if history:
-			response = conversation.predict(input=question, history=chat_history)
-		else:
-			response = conversation.predict(input=question)
-	except:
-			print("16k tokens")
-			chat = ChatOpenAI(temperature=0, verbose=True, model='gpt-3.5-turbo-16k')
-			conversation = ConversationChain(
-				llm=chat,
-				verbose=False,
-				prompt=prompt)
-			if history:
-				response = conversation.predict(input=question, history=chat_history)
-				print("response history", response)
-			else:
-				response = conversation.predict(input=question)
-				print("response NO history", response)
-
-
-	return response
-
+Pregunta independiente:"""
+	CONDENSE_QUESTION_PROMPT = PromptTemplate(template=condense_template, input_variables=["chat_history", "question"])
+	
+	llm = ChatOpenAI()
+	
+	question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
+	
+	llm2 = ChatOpenAI(temperature=0, verbose=True)
+	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=200)
+	question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
+	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
+	
+	chain = ConversationalRetrievalChain(
+	    retriever=lotr,
+	    question_generator=question_generator,
+	    combine_docs_chain=doc_chain,
+	    verbose=True, return_source_documents=True
+	)
+	
+	chain.combine_docs_chain.llm_chain.prompt = chat_prompt
+	return chain
+	
 def check_password():
     """Returns `True` if the user had the correct password."""
 
@@ -156,8 +162,10 @@ def check_password():
     else:
         # Password correct.
         return True
-
 if check_password():
+	
+	chain = get_chain()
+	
 	st.title("CardioBot :hospital:")
 	col1, col2 = st.columns(2)
 	with col1:
@@ -185,36 +193,32 @@ if check_password():
 		            try:
 		                    #docs = retriever.get_relevant_documents(user_input)
 		                    if len(st.session_state.ai) == 0:
-		                        print("here 1")
-		                        output, raw_string = answer_question(user_input, [])
-		                        #response = chain({"question": user_input, "chat_history": []})
-		                        # output = response['answer']
-		                        # docs = response['source_documents']
-		                        # raw_string = ''
-		                        # for d in range(len(docs)):
-		                        # 	raw_string += f'Extracto {d+1}:\n'
-		                        # 	raw_string += docs[d].page_content.replace('\n', ' ')
-		                        # 	raw_string += '\n'
-		                        # 	#raw_string += f"Página {str(docs[d].metadata['page'])}"
-		                        # 	raw_string += '\n\n'
+		                        response = chain({"question": user_input, "chat_history": []})
+		                        output = response['answer']
+		                        docs = response['source_documents']
+		                        raw_string = ''
+		                        for d in range(len(docs)):
+		                        	raw_string += f'Extracto {d+1}:\n'
+		                        	raw_string += docs[d].page_content.replace('\n', ' ')
+		                        	raw_string += '\n'
+		                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
+		                        	raw_string += '\n\n'
 		                        st.session_state['data'].append(raw_string)
 		                        st.session_state.ai.append(output)
 		                        st.session_state.past.append(user_input)
 		                        st.session_state['generated'].append(output)   
 		                    elif len(st.session_state.ai) == 1:
-		                        print("here 2")
 		                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
-		                        output, raw_string = answer_question(user_input, chat_history)
-		                        #response = chain({"question": user_input, "chat_history": chat_history})
-		                        # output = response['answer']
-		                        # docs = response['source_documents']   
-		                        # raw_string = ''
-		                        # for d in range(len(docs)):
-		                        # 	raw_string += f'Extracto {d+1}:\n'
-		                        # 	raw_string += docs[d].page_content.replace('\n', ' ')
-		                        # 	raw_string += '\n'
-		                        # 	#raw_string += f"Página {str(docs[d].metadata['page'])}"
-		                        # 	raw_string += '\n\n'
+		                        response = chain({"question": user_input, "chat_history": chat_history})
+		                        output = response['answer']
+		                        docs = response['source_documents']   
+		                        raw_string = ''
+		                        for d in range(len(docs)):
+		                        	raw_string += f'Extracto {d+1}:\n'
+		                        	raw_string += docs[d].page_content.replace('\n', ' ')
+		                        	raw_string += '\n'
+		                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
+		                        	raw_string += '\n\n'
 		                        st.session_state['data'].append(raw_string) 
 		                        st.session_state.ai.append(output)
 		                        st.session_state.past.append(user_input)
