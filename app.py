@@ -109,7 +109,7 @@ llm3 = ChatOpenAI(temperature=0, verbose=True, model='gpt-3.5-turbo')
 doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
 	
 chain = ConversationalRetrievalChain(
-	    retriever=lotr,
+	    retriever=retriever,
 	    question_generator=question_generator,
 	    combine_docs_chain=doc_chain,
 	    verbose=True, return_source_documents=True
