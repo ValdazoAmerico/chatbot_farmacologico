@@ -564,10 +564,10 @@ if check_password():
 			                # print(data)
 			                # if data == "OK":
 			                    if len(st.session_state.ai) == 0:
-						with get_openai_callback() as cb:
+			                        with get_openai_callback() as cb:
 			                        	response = chain({"question": user_input, "chat_history": []})
-						cost = round(cb.total_cost,5)
-						tokens = cb.total_tokens
+			                        cost = round(cb.total_cost,5)
+			                        tokens = cb.total_tokens
 			                        output = response['answer']
 			                        docs = response['source_documents']
 			                        raw_string = ''
