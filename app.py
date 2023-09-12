@@ -498,6 +498,8 @@ chain.combine_docs_chain.llm_chain.prompt = chat_prompt
 # response = requests.get(url)
 # #data = response.credits
 # print(response)
+data = requests.get(url).json()
+print(data)
 
 def check_password():
     """Returns `True` if the user had the correct password."""
@@ -562,7 +564,10 @@ if check_password():
 			                # print(data)
 			                # if data == "OK":
 			                    if len(st.session_state.ai) == 0:
-			                        response = chain({"question": user_input, "chat_history": []})
+						with get_openai_callback() as cb:
+			                        	response = chain({"question": user_input, "chat_history": []})
+						cost = round(cb.total_cost,5)
+						tokens = cb.total_tokens
 			                        output = response['answer']
 			                        docs = response['source_documents']
 			                        raw_string = ''
@@ -577,7 +582,8 @@ if check_password():
 			                        st.session_state['data'].append(raw_string)
 			                        st.session_state.ai.append(output)
 			                        st.session_state.past.append(user_input)
-			                        st.session_state['generated'].append(output)   
+			                        st.session_state['generated'].append(output)
+						
 			                    elif len(st.session_state.ai) == 1:
 			                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 			                        response = chain({"question": user_input, "chat_history": chat_history})
