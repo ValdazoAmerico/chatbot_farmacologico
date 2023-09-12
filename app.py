@@ -41,10 +41,7 @@ if "temp" not in st.session_state:
 
 if 'data' not in st.session_state:
 	st.session_state['data'] = []
-
-@st.cache_resource
-def get_chain():
-	replacement_list = [{'TAVI': 'reemplazo valvular percutaneo'},
+replacement_list = [{'TAVI': 'reemplazo valvular percutaneo'},
                     {'IAMCEST': 'IAM con elevacion del ST'},
                     {'IAMSEST': 'IAM sin elevacion del ST'},
                     {'AI': 'angina inestable'},
@@ -69,7 +66,7 @@ def get_chain():
                     {'TVP': 'trombosis venosa profunda'},
                     {'TEP': 'tromboembolismo pulmonar'},
                     {'RMN': 'resonancia magnetica'}]
-	stopw = ['tendria',
+stopw = ['tendria',
  'les',
  'fueramos',
  'sintiendo',
@@ -386,7 +383,7 @@ def get_chain():
  'Estudio',
  'estudios',
  'cuales']
-	def clean_text(text):
+def clean_text(text):
   		text = text.lower()
   		text = unidecode(text)
   		text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
@@ -394,7 +391,7 @@ def get_chain():
   		filtered_words = [word for word in words if word.lower() not in stopw]
   		return " ".join(filtered_words).strip()
 
-	class CustomRetriever(BaseRetriever):
+class CustomRetriever(BaseRetriever):
     		def _get_relevant_documents(
         self, query: str, *, run_manager: None
     ):
@@ -409,6 +406,8 @@ def get_chain():
         		documents = lotr.get_relevant_documents(query)
         
         		return documents
+@st.cache_resource
+def get_chain():
 	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
 	
 	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
