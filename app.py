@@ -494,7 +494,11 @@ chain = ConversationalRetrievalChain(
 	)
 	
 chain.combine_docs_chain.llm_chain.prompt = chat_prompt
-	
+
+response = requests.get(url)
+#data = response.credits
+print(response)
+
 def check_password():
     """Returns `True` if the user had the correct password."""
 
