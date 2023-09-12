@@ -495,12 +495,6 @@ chain = ConversationalRetrievalChain(
 	
 chain.combine_docs_chain.llm_chain.prompt = chat_prompt
 
-# response = requests.get(url)
-# #data = response.credits
-# print(response)
-data = requests.get(url).json()
-print(data.get('credits'))
-
 def check_password():
     """Returns `True` if the user had the correct password."""
 
@@ -559,14 +553,14 @@ if check_password():
 		        else:
 		            try:
 			                #docs = lotr.get_relevant_documents(user_input)
-			                response = requests.get(url).json()
-			                data = response.get('credits')
-			                print(data)
-			                if data == "OK":
+			                res_get = requests.get(url).json()
+			                res_get = response.get('credits')
+
+			                if res_excel == "OK":
 			                    if len(st.session_state.ai) == 0:
 			                        with get_openai_callback() as cb:
 			                        	response = chain({"question": user_input, "chat_history": []})
-			                        cost = round(cb.total_cost,5)
+			                        prince = round(cb.total_cost,5)
 			                        tokens = cb.total_tokens
 			                        output = response['answer']
 			                        docs = response['source_documents']
@@ -583,6 +577,21 @@ if check_password():
 			                        st.session_state.ai.append(output)
 			                        st.session_state.past.append(user_input)
 			                        st.session_state['generated'].append(output)
+			                        data = {
+    			                        "question": user_input,
+    			                        "answer": output,
+    			                        "context": raw_string,
+    			                        "tokens": tokens,
+    			                        "price": price
+			                        }
+			                        json_data = json.dumps(data)
+
+			                        headers = {"Content-Type": "application/json"}
+
+			                        res_post = requests.post(url, data=json_data, headers=headers)
+			                        print("RES:")
+			                        print(res_post)
+						
 						
 			                    elif len(st.session_state.ai) == 1:
 			                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
