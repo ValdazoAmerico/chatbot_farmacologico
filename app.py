@@ -560,7 +560,7 @@ if check_password():
 			                    if len(st.session_state.ai) == 0:
 			                        with get_openai_callback() as cb:
 			                        	response = chain({"question": user_input, "chat_history": []})
-			                        prince = round(cb.total_cost,5)
+			                        price = round(cb.total_cost,5)
 			                        tokens = cb.total_tokens
 			                        output = response['answer']
 			                        docs = response['source_documents']
@@ -581,8 +581,8 @@ if check_password():
     			                        "question": user_input,
     			                        "answer": output,
     			                        "context": raw_string,
-    			                        "tokens": tokens,
-    			                        "price": price
+    			                        "tokens": int(tokens),
+    			                        "price": float(price)
 			                        }
 			                        json_data = json.dumps(data)
 
