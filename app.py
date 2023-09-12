@@ -556,11 +556,11 @@ if check_password():
 		            st.session_state['generated'].append('¡Hola! Soy CardioBot, una herramienta especializada para apoyar a los médicos en el análisis de textos relacionados con cardiología. Mi conocimiento se basa en información basada en evidencia científica sobre tratamientos y medicación en esta área.')
 		        else:
 		            try:
-			                #docs = lotr.get_relevant_documents(user_input)
-			                response = requests.get(url)
-			                data = response['credits']
-			                print(data)
-			                if data == "OK":
+			                # #docs = lotr.get_relevant_documents(user_input)
+			                # response = requests.get(url)
+			                # data = response['credits']
+			                # print(data)
+			                # if data == "OK":
 			                    if len(st.session_state.ai) == 0:
 			                        response = chain({"question": user_input, "chat_history": []})
 			                        output = response['answer']
