@@ -392,20 +392,25 @@ def clean_text(text):
   		return " ".join(filtered_words).strip()
 
 class CustomRetriever(BaseRetriever):
-    		def _get_relevant_documents(
+    def _get_relevant_documents(
         self, query: str, *, run_manager: None
     ):
-        		print("RAW QUERY", query)
-        		for replacement_dict in replacement_list:
-            			for key, value in replacement_dict.items():
-                			query = query.replace(key, f"{key} {value}")
-        		query = clean_text(query)
-        		query = query.replace('latinoamerica','latinoamérica')
-        		query = query.replace('latino america','latinoamérica')
-        		print("CLEAN QUERY", query)
-        		documents = lotr.get_relevant_documents(query)
+        # Use your existing retriever to get the documents
+        print("RAW QUERY", query)
+        # Process the input string
+        for replacement_dict in replacement_list:
+            for key, value in replacement_dict.items():
+                query = query.replace(key, f"{key} {value}")
+        query = clean_text(query)
+        query = query.replace('latinoamerica','latinoamérica')
+        query = query.replace('latino america','latinoamérica')
+        print("CLEAN QUERY", query)
+        documents = lotr.get_relevant_documents(query)
         
-        		return documents
+        # Sort the documents by "source"
+        #documents = sorted(documents, key=lambda doc: doc.metadata.get('source'))
+        
+        return documents
 @st.cache_resource
 def get_chain():
 	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
