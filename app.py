@@ -426,19 +426,6 @@ retriever.alpha = 0.25
 	#retriever2.k=2
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
 
-data = {
-    "question": "Porque el IAM...",
-    "answer": "Respuesta...",
-    "context": "ASDFASDFASFASFASDFDSADF",
-    "tokens": 334,
-    "price": 0.0333
-}
-json_data = json.dumps(data)
-
-res_post = requests.post(url, data=json_data)
-print("RES:")
-print(res_post)
-
 class CustomRetriever(BaseRetriever):
     def _get_relevant_documents(self, query: str, *, run_manager: None):
         # Use your existing retriever to get the documents
@@ -599,9 +586,7 @@ if check_password():
 			                        }
 			                        json_data = json.dumps(data)
 
-			                        headers = {"Content-Type": "application/json"}
-
-			                        res_post = requests.post(url, data=json_data, headers=headers)
+			                        res_post = requests.post(url, data=json_data)
 			                        print("RES:")
 			                        print(res_post)
 						
