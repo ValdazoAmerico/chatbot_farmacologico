@@ -27,7 +27,8 @@ from unidecode import unidecode
 from langchain.schema.retriever import BaseRetriever, Document
 from langchain.callbacks.manager import CallbackManagerForRetrieverRun
 from typing import List
-import re 
+import re
+from langchain.callbacks.manager import CallbackManagerForRetrieverRun
 
 if 'generated' not in st.session_state:
 	st.session_state['generated'] = []
@@ -425,7 +426,7 @@ retriever.alpha = 0.25
 	#retriever2.k=2
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
 class CustomRetriever(BaseRetriever):
-    def _get_relevant_documents(self, query: str, *, run_manager: None) -> List[Document]:
+    def _get_relevant_documents(self, query: str, *, run_manager: CallbackManagerForRetrieverRun) -> List[Document]:
         # Use your existing retriever to get the documents
         print("RAW QUERY", query)
 
@@ -438,7 +439,7 @@ class CustomRetriever(BaseRetriever):
         query = query.replace('latinoamerica', 'latinoamérica')
         query = query.replace('latino america', 'latinoamérica')
         
-        documents = lotr.get_relevant_documents(query)
+        documents = lotr.get_relevant_documents(query, callbacks=run_manager.get_child())
         return documents
 custom_retriever = CustomRetriever()
 	
