@@ -26,6 +26,7 @@ import weaviate
 from unidecode import unidecode
 from langchain.schema.retriever import BaseRetriever, Document
 from langchain.callbacks.manager import CallbackManagerForRetrieverRun
+from typing import List
 import re 
 
 if 'generated' not in st.session_state:
@@ -424,7 +425,7 @@ retriever.alpha = 0.25
 	#retriever2.k=2
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
 class CustomRetriever(BaseRetriever):
-    def _aget_relevant_documents(self, query: str, *, run_manager: None):
+    def _aget_relevant_documents(self, query: str, *, run_manager: None) -> List[Document]:
         # Use your existing retriever to get the documents
         print("RAW QUERY", query)
 
