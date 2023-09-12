@@ -427,17 +427,15 @@ retriever.alpha = 0.25
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
 
 data = {
-    			                        "question": user_input,
-    			                        "answer": output,
-    			                        "context": raw_string,
-    			                        "tokens": tokens,
-    			                        "price": price
-			                        }
+    "question": "Porque el IAM...",
+    "answer": "Respuesta...",
+    "context": "ASDFASDFASFASFASDFDSADF",
+    "tokens": 334,
+    "price": 0.0333
+}
 json_data = json.dumps(data)
 
-headers = {"Content-Type": "application/json"}
-
-res_post = requests.post(url, data=json_data, headers=headers)
+res_post = requests.post(url, data=data)
 print("RES:")
 print(res_post)
 
