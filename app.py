@@ -25,10 +25,8 @@ from langchain.retrievers.merger_retriever import MergerRetriever
 import weaviate
 from unidecode import unidecode
 from langchain.schema.retriever import BaseRetriever, Document
-from langchain.callbacks.manager import CallbackManagerForRetrieverRun
-from typing import List
 import re
-from langchain.callbacks.manager import CallbackManagerForRetrieverRun
+
 
 if 'generated' not in st.session_state:
 	st.session_state['generated'] = []
@@ -425,25 +423,24 @@ retriever.alpha = 0.25
 	#retriever.k=2
 	#retriever2.k=2
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
-print("LEN")
-print(len(lotr.get_relevant_documents("Estudio ASCEND")))
-# class CustomRetriever(BaseRetriever):
-#     def _get_relevant_documents(self, query: str, *, run_manager: CallbackManagerForRetrieverRun) -> List[Document]:
-#         # Use your existing retriever to get the documents
-#         print("RAW QUERY", query)
 
-#         # Process the input string
-#         for replacement_dict in replacement_list:
-#             for key, value in replacement_dict.items():
-#                 query = query.replace(key, f"{key} {value}")
+class CustomRetriever(BaseRetriever):
+    def _get_relevant_documents(self, query: str, *, run_manager: None):
+        # Use your existing retriever to get the documents
+        print("RAW QUERY", query)
 
-#         query = clean_text(query)
-#         query = query.replace('latinoamerica', 'latinoamérica')
-#         query = query.replace('latino america', 'latinoamérica')
+        # Process the input string
+        for replacement_dict in replacement_list:
+            for key, value in replacement_dict.items():
+                query = query.replace(key, f"{key} {value}")
+
+        query = clean_text(query)
+        query = query.replace('latinoamerica', 'latinoamérica')
+        query = query.replace('latino america', 'latinoamérica')
         
-#         documents = lotr.get_relevant_documents(query, callbacks=run_manager.get_child())
-#         return documents
-# custom_retriever = CustomRetriever()
+        documents = lotr.get_relevant_documents(query, callbacks=run_manager.get_child())
+        return documents
+custom_retriever = CustomRetriever()
 	
 	
 prompt=PromptTemplate(
