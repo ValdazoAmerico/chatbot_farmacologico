@@ -439,6 +439,7 @@ class CustomRetriever(BaseRetriever):
         query = clean_text(query)
         query = query.replace('latinoamerica', 'latinoamérica')
         query = query.replace('latino america', 'latinoamérica')
+        print("CLEAN QUERY", query)
         
         documents = lotr.get_relevant_documents(query)
         return documents
@@ -580,9 +581,9 @@ if check_password():
 			                        data = {
     			                        "question": user_input,
     			                        "answer": output,
-    			                        "context": raw_string,
-    			                        "tokens": int(tokens),
-    			                        "price": float(price)
+    			                        "context": "hola",
+    			                        "tokens": tokens,
+    			                        "price": price
 			                        }
 			                        json_data = json.dumps(data)
 
