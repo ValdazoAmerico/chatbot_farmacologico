@@ -23,6 +23,9 @@ from langchain.callbacks import get_openai_callback
 from langchain.retrievers.weaviate_hybrid_search import WeaviateHybridSearchRetriever
 from langchain.retrievers.merger_retriever import MergerRetriever
 import weaviate
+from unidecode import unidecode
+from langchain.schema.retriever import BaseRetriever, Document
+from langchain.callbacks.manager import CallbackManagerForRetrieverRun
 
 if 'generated' not in st.session_state:
 	st.session_state['generated'] = []
@@ -41,35 +44,31 @@ if 'data' not in st.session_state:
 
 @st.cache_resource
 def get_chain():
-	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
-	
-	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
-	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
-	        })
-	auth_config2 = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY2'])
-	
-	client2 = weaviate.Client(url=os.environ['WEAVIATE_URL2'], auth_client_secret=auth_config2, additional_headers={
-	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
-	        })
-	retriever = WeaviateHybridSearchRetriever(
-    	client=client,
-    	index_name="Evicardio",
-    	text_key="content",
-    	attributes=[],
-    	create_schema_if_missing=True,
-)
-
-	retriever2 = WeaviateHybridSearchRetriever(
-    	client=client2,
-    	index_name="Evicardio",
-    	text_key="content",
-    	attributes=[],
-    	create_schema_if_missing=True,
-)
-	retriever.alpha = 0.25
-	#retriever.k=2
-	#retriever2.k=2
-	lotr = MergerRetriever(retrievers=[retriever, retriever2])
+	replacement_list = [{'TAVI': 'reemplazo valvular percutaneo'},
+                    {'IAMCEST': 'IAM con elevacion del ST'},
+                    {'IAMSEST': 'IAM sin elevacion del ST'},
+                    {'AI': 'angina inestable'},
+                    {'SK': 'estreptoquinasa'},
+                    {'DOACs': 'ACOD'},
+                    {'DOAC': 'ACOD'},
+                    {'NOAC': 'ACOD'},
+                    {'FA': 'fibrilación auricular'},
+                    {'AA': 'aleteo auricular'},
+                    {'ECG': 'electrocardiograma'},
+                    {'CDI': 'cardiodefibrilador implantable'},
+                    {'TRC': 'terapia de resincronización cardiaca'},
+                    {'TRH': 'terapia de reemplazo hormonal'},
+                    {'SCA': 'sindrome coronario agudo'},
+                    {'AVK': 'antagonistas de la vitamina K'},
+                    {'ATC': 'angioplastia coronaria'},
+                    {'ICC': 'insuficiencia cardiaca congestiva'},
+                    {'ICAD': 'insuficiencia cardiaca aguda'},
+                    {'AAA': 'aneurisma de aorta abdominal'},
+                    {'EAo': 'estenosis aortica'},
+                    {'IAo': 'insuficiencia aortica'},
+                    {'TVP': 'trombosis venosa profunda'},
+                    {'TEP': 'tromboembolismo pulmonar'},
+                    {'RMN': 'resonancia magnetica'}]
 	stopw = ['tendria',
  'les',
  'fueramos',
@@ -387,6 +386,60 @@ def get_chain():
  'Estudio',
  'estudios',
  'cuales']
+	def clean_text(text):
+  		text = text.lower()
+  		text = unidecode(text)
+  		text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
+  		words = text.split()
+  		filtered_words = [word for word in words if word.lower() not in stopw]
+  		return " ".join(filtered_words).strip()
+
+	class CustomRetriever(BaseRetriever):
+    		def _get_relevant_documents(
+        self, query: str, *, run_manager: None
+    ):
+        	print("RAW QUERY", query)
+        	for replacement_dict in replacement_list:
+            	for key, value in replacement_dict.items():
+                	query = query.replace(key, f"{key} {value}")
+        	query = clean_text(query)
+        	query = query.replace('latinoamerica','latinoamérica')
+        	query = query.replace('latino america','latinoamérica')
+        	print("CLEAN QUERY", query)
+        	documents = lotr.get_relevant_documents(query)
+        
+        	return documents
+	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
+	
+	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
+	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
+	        })
+	auth_config2 = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY2'])
+	
+	client2 = weaviate.Client(url=os.environ['WEAVIATE_URL2'], auth_client_secret=auth_config2, additional_headers={
+	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
+	        })
+	retriever = WeaviateHybridSearchRetriever(
+    	client=client,
+    	index_name="Evicardio",
+    	text_key="content",
+    	attributes=[],
+    	create_schema_if_missing=True,
+)
+
+	retriever2 = WeaviateHybridSearchRetriever(
+    	client=client2,
+    	index_name="Evicardio",
+    	text_key="content",
+    	attributes=[],
+    	create_schema_if_missing=True,
+)
+	retriever.alpha = 0.25
+	#retriever.k=2
+	#retriever2.k=2
+	lotr = MergerRetriever(retrievers=[retriever, retriever2])
+	custom_retriever = CustomRetriever()
+	
 	
 	prompt=PromptTemplate(
 	    template="""Actúas como un médico cardiólogo especializado. Tu tarea consiste en proporcionar respuestas precisas y fundamentadas en el campo de la cardiología, basándote únicamente en la información proporcionada en el texto médico que se te presente. Tu objetivo es comportarte como un experto en cardiología y ofrecer asistencia confiable y precisa.
@@ -422,17 +475,15 @@ Pregunta de seguimiento: {question}
 Pregunta independiente:"""
 	CONDENSE_QUESTION_PROMPT = PromptTemplate(template=condense_template, input_variables=["chat_history", "question"])
 	
-	llm = ChatOpenAI()
+	llm_question = ChatOpenAI()
 	
-	question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
+	question_generator = LLMChain(llm=llm_question, prompt=CONDENSE_QUESTION_PROMPT)
 	
-	llm2 = ChatOpenAI(temperature=0, verbose=True)
-	llm3 = ChatOpenAI(temperature=0, verbose=True, max_tokens=500, model='gpt-3.5-turbo-16k')
-	question_generator = LLMChain(llm=llm2, prompt=CONDENSE_QUESTION_PROMPT)
-	doc_chain = load_qa_chain(llm3, chain_type="stuff", verbose=True)
+	llm = ChatOpenAI(temperature=0, verbose=True, max_tokens=500, model='gpt-3.5-turbo-16k')
+	doc_chain = load_qa_chain(llm, chain_type="stuff", verbose=True)
 	
 	chain = ConversationalRetrievalChain(
-	    retriever=lotr,
+	    retriever=custom_retriever,
 	    question_generator=question_generator,
 	    combine_docs_chain=doc_chain,
 	    verbose=True, return_source_documents=True
