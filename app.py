@@ -391,7 +391,7 @@ def clean_text(text):
   		filtered_words = [word for word in words if word.lower() not in stopw]
   		return " ".join(filtered_words).strip()
 
-
+print(clean_text("hola como estás?"))
 
 auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
 	
