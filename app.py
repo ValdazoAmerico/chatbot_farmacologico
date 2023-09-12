@@ -422,8 +422,8 @@ retriever2 = WeaviateHybridSearchRetriever(
     	create_schema_if_missing=True,
 )
 retriever.alpha = 0.25
-	#retriever.k=2
-	#retriever2.k=2
+retriever.k=2
+retriever2.k=2
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
 
 class CustomRetriever(BaseRetriever):
@@ -484,7 +484,7 @@ llm_question = ChatOpenAI()
 	
 question_generator = LLMChain(llm=llm_question, prompt=CONDENSE_QUESTION_PROMPT)
 	
-llm = ChatOpenAI(temperature=0, verbose=True, max_tokens=500, model='gpt-3.5-turbo-16k')
+llm = ChatOpenAI(temperature=0, verbose=True, max_tokens=500)
 doc_chain = load_qa_chain(llm, chain_type="stuff", verbose=True)
 	
 chain = ConversationalRetrievalChain(
