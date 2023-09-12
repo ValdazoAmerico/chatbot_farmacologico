@@ -524,17 +524,6 @@ def check_password():
         return True
 
 
-
-
-if response.status_code == 200:
-    # The request was successful, and you can access the response content
-    data = response.text
-    print(data)
-else:
-    # Handle the case where the request was not successful
-    print(f"Request failed with status code {response.status_code}")
-
-
 if check_password():
 		#response = chain({"question": "que es el enalapril", "chat_history": []})
 		#print(response)
