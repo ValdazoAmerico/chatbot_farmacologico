@@ -558,7 +558,7 @@ if check_password():
 		            try:
 			                #docs = lotr.get_relevant_documents(user_input)
 			                response = requests.get(url)
-			                data = response.credits
+			                data = response['credits']
 			                print(data)
 			                if data == "OK":
 			                    if len(st.session_state.ai) == 0:
