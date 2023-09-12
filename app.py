@@ -27,7 +27,7 @@ from unidecode import unidecode
 from langchain.schema.retriever import BaseRetriever, Document
 import re
 import requests
-
+import json
 url = "https://script.google.com/macros/s/AKfycbxrStUsQkyv7oQrEIhWTmT2mSCGrZ6N3SRtjw41YzvoE2GV6E4ZMR43kBVxT_KIoYmMCA/exec"
 
 if 'generated' not in st.session_state:
@@ -435,7 +435,7 @@ data = {
 }
 json_data = json.dumps(data)
 
-res_post = requests.post(url, data=data)
+res_post = requests.post(url, data=json_data)
 print("RES:")
 print(res_post)
 
