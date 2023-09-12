@@ -554,9 +554,8 @@ if check_password():
 		        else:
 		            try:
 			                #docs = lotr.get_relevant_documents(user_input)
-			                #res_get = requests.get(url).json()
-			                #res_get = response.get('credits')
-			                res_excel="OK"
+			                res_get = requests.get(url).json()
+			                res_get = res_get.get('credits')
 
 			                if res_excel == "OK":
 			                    if len(st.session_state.ai) == 0:
@@ -592,7 +591,10 @@ if check_password():
 
 			                    elif len(st.session_state.ai) == 1:
 			                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
-			                        response = chain({"question": user_input, "chat_history": chat_history})
+			                        with get_openai_callback() as cb:
+			                        	response = chain({"question": user_input, "chat_history": chat_history})
+			                        price = round(cb.total_cost,5)
+			                        tokens = cb.total_tokens
 			                        output = response['answer']
 			                        docs = response['source_documents']   
 			                        raw_string = ''
@@ -606,9 +608,21 @@ if check_password():
 			                        st.session_state.ai.append(output)
 			                        st.session_state.past.append(user_input)
 			                        st.session_state['generated'].append(output)
+			                        data = {
+    			                        "question": user_input,
+    			                        "answer": output,
+    			                        "context": raw_string,
+    			                        "tokens": tokens,
+    			                        "price": price
+			                        }
+			                        json_data = json.dumps(data)
+			                        requests.post(url, data=json_data)
 			                    else:
 			                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]                
-			                        response = chain({"question": user_input, "chat_history": chat_history})
+			                        with get_openai_callback() as cb:
+			                        	response = chain({"question": user_input, "chat_history": chat_history})
+			                        price = round(cb.total_cost,5)
+			                        tokens = cb.total_tokens
 			                        output = response['answer']
 			                        docs = response['source_documents']
 			                        raw_string = ''
@@ -622,6 +636,15 @@ if check_password():
 			                        st.session_state.ai.append(output)
 			                        st.session_state.past.append(user_input)
 			                        st.session_state['generated'].append(output)
+			                        data = {
+    			                        "question": user_input,
+    			                        "answer": output,
+    			                        "context": raw_string,
+    			                        "tokens": tokens,
+    			                        "price": price
+			                        }
+			                        json_data = json.dumps(data)
+			                        requests.post(url, data=json_data)
 		            except:
 		                pass
 		
