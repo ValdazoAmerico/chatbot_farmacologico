@@ -438,7 +438,7 @@ class CustomRetriever(BaseRetriever):
         query = query.replace('latinoamerica', 'latinoamérica')
         query = query.replace('latino america', 'latinoamérica')
         
-        documents = lotr.get_relevant_documents(query, callbacks=run_manager.get_child())
+        documents = lotr.get_relevant_documents(query)
         return documents
 custom_retriever = CustomRetriever()
 	
