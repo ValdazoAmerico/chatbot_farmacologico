@@ -557,7 +557,7 @@ if check_password():
 			                res_get = requests.get(url).json()
 			                res_get = res_get.get('credits')
 
-			                if res_excel == "OK":
+			                if res_get == "OK":
 			                    if len(st.session_state.ai) == 0:
 			                        with get_openai_callback() as cb:
 			                        	response = chain({"question": user_input, "chat_history": []})
