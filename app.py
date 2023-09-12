@@ -564,11 +564,10 @@ if check_password():
 		        else:
 		            try:
 			                #docs = lotr.get_relevant_documents(user_input)
-					response = requests.get(url)
-					data = response.credits
-					print(data)
-					if data == "OK":
-					    
+			                response = requests.get(url)
+			                data = response.credits
+			                print(data)
+			                if data == "OK":
 			                    if len(st.session_state.ai) == 0:
 			                        response = chain({"question": user_input, "chat_history": []})
 			                        output = response['answer']
