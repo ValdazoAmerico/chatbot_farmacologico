@@ -554,8 +554,9 @@ if check_password():
 		        else:
 		            try:
 			                #docs = lotr.get_relevant_documents(user_input)
-			                res_get = requests.get(url).json()
-			                res_get = response.get('credits')
+			                #res_get = requests.get(url).json()
+			                #res_get = response.get('credits')
+			                res_excel="OK"
 
 			                if res_excel == "OK":
 			                    if len(st.session_state.ai) == 0:
