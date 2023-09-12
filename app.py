@@ -423,7 +423,7 @@ retriever2 = WeaviateHybridSearchRetriever(
 )
 retriever.alpha = 0.25
 retriever.k=2
-retriever2.k=2
+retriever2.k=1
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
 
 class CustomRetriever(BaseRetriever):
