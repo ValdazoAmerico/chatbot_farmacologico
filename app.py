@@ -425,7 +425,7 @@ retriever.alpha = 0.25
 	#retriever2.k=2
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
 class CustomRetriever(BaseRetriever):
-    def _aget_relevant_documents(self, query: str, *, run_manager: None) -> List[Document]:
+    def _get_relevant_documents(self, query: str, *, run_manager: None) -> List[Document]:
         # Use your existing retriever to get the documents
         print("RAW QUERY", query)
 
