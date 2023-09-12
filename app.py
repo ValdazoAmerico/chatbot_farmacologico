@@ -582,7 +582,7 @@ if check_password():
 			                        data = {
     			                        "question": user_input,
     			                        "answer": output,
-    			                        "context": "hola",
+    			                        "context": raw_string,
     			                        "tokens": tokens,
     			                        "price": price
 			                        }
