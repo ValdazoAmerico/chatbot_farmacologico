@@ -26,6 +26,7 @@ import weaviate
 from unidecode import unidecode
 from langchain.schema.retriever import BaseRetriever, Document
 from langchain.callbacks.manager import CallbackManagerForRetrieverRun
+import re 
 
 if 'generated' not in st.session_state:
 	st.session_state['generated'] = []
