@@ -394,7 +394,7 @@ def clean_text(text):
   		filtered_words = [word for word in words if word.lower() not in stopw]
   		return " ".join(filtered_words).strip()
 
-print(clean_text("hola como estás?"))
+#print(clean_text("hola como estás?"))
 
 auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
 	
@@ -425,7 +425,8 @@ retriever.alpha = 0.25
 	#retriever.k=2
 	#retriever2.k=2
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
-print(lotr.get_relevant_documents("Estudio ASCEND"))
+print("LEN")
+print(len(lotr.get_relevant_documents("Estudio ASCEND")))
 # class CustomRetriever(BaseRetriever):
 #     def _get_relevant_documents(self, query: str, *, run_manager: CallbackManagerForRetrieverRun) -> List[Document]:
 #         # Use your existing retriever to get the documents
