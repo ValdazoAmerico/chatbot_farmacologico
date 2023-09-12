@@ -485,7 +485,7 @@ llm = ChatOpenAI(temperature=0, verbose=True, max_tokens=500, model='gpt-3.5-tur
 doc_chain = load_qa_chain(llm, chain_type="stuff", verbose=True)
 	
 chain = ConversationalRetrievalChain(
-	    retriever=lotr,
+	    retriever=custom_retriever,
 	    question_generator=question_generator,
 	    combine_docs_chain=doc_chain,
 	    verbose=True, return_source_documents=True
