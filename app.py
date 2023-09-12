@@ -408,7 +408,7 @@ def get_chain():
         		print("CLEAN QUERY", query)
         		documents = lotr.get_relevant_documents(query)
         
-        	return documents
+        		return documents
 	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
 	
 	client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
