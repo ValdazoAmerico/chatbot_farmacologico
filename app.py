@@ -26,7 +26,9 @@ import weaviate
 from unidecode import unidecode
 from langchain.schema.retriever import BaseRetriever, Document
 import re
+import requests
 
+url = "https://script.google.com/macros/s/AKfycbxrStUsQkyv7oQrEIhWTmT2mSCGrZ6N3SRtjw41YzvoE2GV6E4ZMR43kBVxT_KIoYmMCA/exec"
 
 if 'generated' not in st.session_state:
 	st.session_state['generated'] = []
@@ -521,6 +523,18 @@ def check_password():
         # Password correct.
         return True
 
+
+
+
+if response.status_code == 200:
+    # The request was successful, and you can access the response content
+    data = response.text
+    print(data)
+else:
+    # Handle the case where the request was not successful
+    print(f"Request failed with status code {response.status_code}")
+
+
 if check_password():
 		#response = chain({"question": "que es el enalapril", "chat_history": []})
 		#print(response)
@@ -549,56 +563,61 @@ if check_password():
 		            st.session_state['generated'].append('¡Hola! Soy CardioBot, una herramienta especializada para apoyar a los médicos en el análisis de textos relacionados con cardiología. Mi conocimiento se basa en información basada en evidencia científica sobre tratamientos y medicación en esta área.')
 		        else:
 		            try:
-		                    #docs = lotr.get_relevant_documents(user_input)
-		                    if len(st.session_state.ai) == 0:
-		                        response = chain({"question": user_input, "chat_history": []})
-		                        output = response['answer']
-		                        docs = response['source_documents']
-		                        raw_string = ''
-		                        for d in range(len(docs)):
-		                        	raw_string += f'Extracto {d+1}:\n'
-		                        	raw_string += docs[d].page_content.replace('\n', ' ')
-		                        	raw_string += '\n'
-		                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
-		                        	raw_string += '\n\n'
-		                        print(len(docs))
-		                        print("DOCS")
-		                        st.session_state['data'].append(raw_string)
-		                        st.session_state.ai.append(output)
-		                        st.session_state.past.append(user_input)
-		                        st.session_state['generated'].append(output)   
-		                    elif len(st.session_state.ai) == 1:
-		                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
-		                        response = chain({"question": user_input, "chat_history": chat_history})
-		                        output = response['answer']
-		                        docs = response['source_documents']   
-		                        raw_string = ''
-		                        for d in range(len(docs)):
-		                        	raw_string += f'Extracto {d+1}:\n'
-		                        	raw_string += docs[d].page_content.replace('\n', ' ')
-		                        	raw_string += '\n'
-		                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
-		                        	raw_string += '\n\n'
-		                        st.session_state['data'].append(raw_string) 
-		                        st.session_state.ai.append(output)
-		                        st.session_state.past.append(user_input)
-		                        st.session_state['generated'].append(output)
-		                    else:
-		                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]                
-		                        response = chain({"question": user_input, "chat_history": chat_history})
-		                        output = response['answer']
-		                        docs = response['source_documents']
-		                        raw_string = ''
-		                        for d in range(len(docs)):
-		                        	raw_string += f'Extracto {d+1}:\n'
-		                        	raw_string += docs[d].page_content.replace('\n', ' ')
-		                        	raw_string += '\n'
-		                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
-		                        	raw_string += '\n\n'
-		                        st.session_state['data'].append(raw_string)
-		                        st.session_state.ai.append(output)
-		                        st.session_state.past.append(user_input)
-		                        st.session_state['generated'].append(output)
+			                #docs = lotr.get_relevant_documents(user_input)
+					response = requests.get(url)
+					data = response.credits
+					print(data)
+					if data == "OK":
+					    
+			                    if len(st.session_state.ai) == 0:
+			                        response = chain({"question": user_input, "chat_history": []})
+			                        output = response['answer']
+			                        docs = response['source_documents']
+			                        raw_string = ''
+			                        for d in range(len(docs)):
+			                        	raw_string += f'Extracto {d+1}:\n'
+			                        	raw_string += docs[d].page_content.replace('\n', ' ')
+			                        	raw_string += '\n'
+			                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
+			                        	raw_string += '\n\n'
+			                        print(len(docs))
+			                        print("DOCS")
+			                        st.session_state['data'].append(raw_string)
+			                        st.session_state.ai.append(output)
+			                        st.session_state.past.append(user_input)
+			                        st.session_state['generated'].append(output)   
+			                    elif len(st.session_state.ai) == 1:
+			                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
+			                        response = chain({"question": user_input, "chat_history": chat_history})
+			                        output = response['answer']
+			                        docs = response['source_documents']   
+			                        raw_string = ''
+			                        for d in range(len(docs)):
+			                        	raw_string += f'Extracto {d+1}:\n'
+			                        	raw_string += docs[d].page_content.replace('\n', ' ')
+			                        	raw_string += '\n'
+			                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
+			                        	raw_string += '\n\n'
+			                        st.session_state['data'].append(raw_string) 
+			                        st.session_state.ai.append(output)
+			                        st.session_state.past.append(user_input)
+			                        st.session_state['generated'].append(output)
+			                    else:
+			                        chat_history = [(st.session_state['past'][-2], st.session_state['generated'][-2]), (st.session_state['past'][-1], st.session_state['generated'][-1])]                
+			                        response = chain({"question": user_input, "chat_history": chat_history})
+			                        output = response['answer']
+			                        docs = response['source_documents']
+			                        raw_string = ''
+			                        for d in range(len(docs)):
+			                        	raw_string += f'Extracto {d+1}:\n'
+			                        	raw_string += docs[d].page_content.replace('\n', ' ')
+			                        	raw_string += '\n'
+			                        	#raw_string += f"Página {str(docs[d].metadata['page'])}"
+			                        	raw_string += '\n\n'
+			                        st.session_state['data'].append(raw_string)
+			                        st.session_state.ai.append(output)
+			                        st.session_state.past.append(user_input)
+			                        st.session_state['generated'].append(output)
 		            except:
 		                pass
 		
