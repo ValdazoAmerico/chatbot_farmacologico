@@ -430,7 +430,7 @@ def get_chain():
         # Use your existing retriever to get the documents
 			print("RAW QUERY", query)
         # Process the input string
-        		for replacement_dict in replacement_list:
+			for replacement_dict in replacement_list:
             			for key, value in replacement_dict.items():
                 			query = query.replace(key, f"{key} {value}")
         		query = clean_text(query)
