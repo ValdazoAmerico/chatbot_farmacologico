@@ -426,6 +426,21 @@ retriever.alpha = 0.25
 	#retriever2.k=2
 lotr = MergerRetriever(retrievers=[retriever, retriever2])
 
+data = {
+    			                        "question": user_input,
+    			                        "answer": output,
+    			                        "context": raw_string,
+    			                        "tokens": tokens,
+    			                        "price": price
+			                        }
+json_data = json.dumps(data)
+
+headers = {"Content-Type": "application/json"}
+
+res_post = requests.post(url, data=json_data, headers=headers)
+print("RES:")
+print(res_post)
+
 class CustomRetriever(BaseRetriever):
     def _get_relevant_documents(self, query: str, *, run_manager: None):
         # Use your existing retriever to get the documents
