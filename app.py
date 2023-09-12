@@ -587,11 +587,8 @@ if check_password():
 			                        }
 			                        json_data = json.dumps(data)
 
-			                        res_post = requests.post(url, data=json_data)
-			                        print("RES:")
-			                        print(res_post)
-						
-						
+			                        requests.post(url, data=json_data)
+
 			                    elif len(st.session_state.ai) == 1:
 			                        chat_history = [(st.session_state['past'][-1], st.session_state['generated'][-1])]
 			                        response = chain({"question": user_input, "chat_history": chat_history})
