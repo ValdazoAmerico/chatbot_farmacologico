@@ -398,15 +398,15 @@ def get_chain():
     		def _get_relevant_documents(
         self, query: str, *, run_manager: None
     ):
-        	print("RAW QUERY", query)
-        	for replacement_dict in replacement_list:
-            	for key, value in replacement_dict.items():
-                	query = query.replace(key, f"{key} {value}")
-        	query = clean_text(query)
-        	query = query.replace('latinoamerica','latinoamérica')
-        	query = query.replace('latino america','latinoamérica')
-        	print("CLEAN QUERY", query)
-        	documents = lotr.get_relevant_documents(query)
+        		print("RAW QUERY", query)
+        		for replacement_dict in replacement_list:
+            			for key, value in replacement_dict.items():
+                			query = query.replace(key, f"{key} {value}")
+        		query = clean_text(query)
+        		query = query.replace('latinoamerica','latinoamérica')
+        		query = query.replace('latino america','latinoamérica')
+        		print("CLEAN QUERY", query)
+        		documents = lotr.get_relevant_documents(query)
         
         	return documents
 	auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
