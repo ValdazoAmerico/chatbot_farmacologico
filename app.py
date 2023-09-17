@@ -398,21 +398,21 @@ def clean_text(text):
 
 auth_config = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY'])
 	
-client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
-	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
-	        })
-auth_config2 = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY2'])
+# client = weaviate.Client(url=os.environ['WEAVIATE_URL'], auth_client_secret=auth_config, additional_headers={
+# 	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
+# 	        })
+# auth_config2 = weaviate.AuthApiKey(api_key=os.environ['WEAVIATE_API_KEY2'])
 	
 client2 = weaviate.Client(url=os.environ['WEAVIATE_URL2'], auth_client_secret=auth_config2, additional_headers={
 	        "X-OpenAI-Api-Key": os.environ['OPENAI_API_KEY'], # Replace with your OpenAI key
 	        })
-retriever = WeaviateHybridSearchRetriever(
-    	client=client,
-    	index_name="Evicardio",
-    	text_key="content",
-    	attributes=[],
-    	create_schema_if_missing=True,
-)
+# retriever = WeaviateHybridSearchRetriever(
+#     	client=client,
+#     	index_name="Evicardio",
+#     	text_key="content",
+#     	attributes=[],
+#     	create_schema_if_missing=True,
+# )
 
 retriever2 = WeaviateHybridSearchRetriever(
     	client=client2,
@@ -421,10 +421,10 @@ retriever2 = WeaviateHybridSearchRetriever(
     	attributes=[],
     	create_schema_if_missing=True,
 )
-retriever.alpha = 0.25
-retriever.k=2
-retriever2.k=1
-lotr = MergerRetriever(retrievers=[retriever, retriever2])
+retriever2.alpha = 0.25
+
+retriever2.k=3
+# lotr = MergerRetriever(retrievers=[retriever, retriever2])
 
 class CustomRetriever(BaseRetriever):
     def _get_relevant_documents(self, query: str, *, run_manager: None):
@@ -441,7 +441,7 @@ class CustomRetriever(BaseRetriever):
         query = query.replace('latino america', 'latinoamérica')
         print("CLEAN QUERY", query)
         
-        documents = lotr.get_relevant_documents(query)
+        documents = retriever2.get_relevant_documents(query)
         return documents
 custom_retriever = CustomRetriever()
 	
