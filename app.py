@@ -487,8 +487,7 @@ chain = ConversationalRetrievalChain(
 	)
 	
 chain.combine_docs_chain.llm_chain.prompt = chat_prompt
-a = chain({"question": "que son iecas", "chat_history": []})
-print(a)
+
 def check_password():
     """Returns `True` if the user had the correct password."""
 
