@@ -416,7 +416,7 @@ retriever.alpha = 0.25
 
 retriever.k = 3
 
-lotr = MergerRetriever(retrievers=[retriever, retriever2])
+#lotr = MergerRetriever(retrievers=[retriever, retriever2])
 
 class CustomRetriever(BaseRetriever):
     def _get_relevant_documents(self, query: str, *, run_manager: None):
